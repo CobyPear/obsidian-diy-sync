@@ -66,7 +66,23 @@ export default class NodeSyncPlugin extends Plugin {
     });
 
     // add command that syncs the vault to the api host in settings
-    this.addCommand({});
+    this.addCommand({
+      id: "sync-vault-to-server",
+      name: "Sync Vault",
+      callback: async () => {
+        console.log("this.", this.settings);
+        fetch(`${this.settings.apiHost}${this.settings.endpoint}`,
+		{
+			method: 'POST',
+			body: {
+				hello: "world"
+			}
+		})
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.error(err));
+      },
+    });
 
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new SampleSettingTab(this.app, this));
@@ -140,7 +156,7 @@ class SampleSettingTab extends PluginSettingTab {
           })
       );
     new Setting(containerEl)
-      .setName("endpoint")
+      .setName("API Endpoint")
       .setDesc("The location to send your vault")
       .addText((text) =>
         text

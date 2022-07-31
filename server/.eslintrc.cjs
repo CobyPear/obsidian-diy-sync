@@ -1,6 +1,6 @@
 export default {
+  root: true,
   env: {
-    browser: true,
     es2021: true,
   },
   extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
@@ -15,5 +15,7 @@ export default {
     "linebreak-style": ["error", "unix"],
     quotes: ["error", "double"],
     semi: ["error", "always"],
+    "space-in-brackets": ["error", "always"],
+    "newline-per-chained-call": ["error", "always"],
   },
 };

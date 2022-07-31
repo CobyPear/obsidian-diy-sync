@@ -9,5 +9,7 @@
     "noImplicitAny": true,
     "alwaysStrict": true,
     "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "outDir": "build"
   }
 }
