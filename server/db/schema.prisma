@@ -1,0 +1,21 @@
+datasource db {
+    provider = "sqlite"
+    url      = "file:./dev.db"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Vault {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    nodes     Node[]
+}
+
+// A node is something in a vault
+model Node {
+    id      Int    @id @default(autoincrement())
+    Vault   Vault? @relation(fields: [vaultId], references: [id])
+    vaultId Int?
+}
