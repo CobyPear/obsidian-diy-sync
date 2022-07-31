@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "clean": "rm -rf  *.js **/*.js && echo 'Removed *.js files!'",
+    "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
     "build": "tsc",
     "watch": "tsc --watch",
     "dev": "pnpm watch & NODE_ENV=development pnpx nodemon ./build/server.js",
