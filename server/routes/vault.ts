@@ -3,6 +3,6 @@ import { vaultControllers } from "../controllers";
 
 const router = Router();
 
-router.route("/vault").get(vaultControllers.get).post(vaultControllers.post);
+router.route("/vault").get(vaultControllers.get).put(vaultControllers.put);
 
 export const vaultRoutes = router;
