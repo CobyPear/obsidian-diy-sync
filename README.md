@@ -15,6 +15,10 @@ This is a monorepo made with pnpm workspaces. Currently not many of the nice mon
 1. run `pnpm install` in your terminal where the repo is cloned
 1. To install the plugin into obsidian, I recommend using a symlink
 1. Symlink the monorepo's `plugin` folder to `/path/to/your/vault/.obsidian/plugins/obsidian-nodejs-sync-plugin
+    on macos at the root of this monorepo: `ln -s ./plugin /path/to/your/vault/.obsidian/plugins/obsidian-nodejs-sync-plugin`
+
+    or in my case, 
+    `ln -s ~/projects/obsidian-diy-sync/plugin ~/Documents/TestingVault/.obsidian/plugins/obsidian-nodejs-sync-plugin`
 1. Now in the monorepo, you can start the plugin in watch mode with `pnpm dev:plugin`
 1. Start the server in dev mode `pnpm dev:server`
 

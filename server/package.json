@@ -9,7 +9,8 @@
     "watch": "tsc --watch",
     "dev": "pnpm watch & NODE_ENV=development pnpx nodemon ./build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=production node server.js",
+    "prisma:generate": "prisma generate --schema=./db/schema.prisma"
   },
   "keywords": [],
   "author": "",

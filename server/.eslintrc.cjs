@@ -1,4 +1,5 @@
-export default {
+module.exports = {
+  extends: ["../eslint.rc"],
   root: true,
   env: {
     es2021: true,
