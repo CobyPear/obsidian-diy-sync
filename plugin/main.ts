@@ -1,24 +1,13 @@
 import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { NodeSyncPluginSettings, VaultToSync, Node } from "types";
 import { extractContent } from "./utils/extractContent";
-// Remember to rename these classes and interfaces!
-
-interface NodeSyncPluginSettings {
-	apiHost: string;
-	endpoint: string;
-	authToken?: string;
-	vaultToFetch?: string;
-}
+import { writeNodeToFile } from "utils/writeNodeToFile";
 
 const DEFAULT_SETTINGS: NodeSyncPluginSettings = {
 	apiHost: "http://localhost:3001",
 	endpoint: "/api/vault",
 	vaultToFetch: "default",
 };
-
-interface DataToPut {
-	vault: string;
-	nodes: Record<string, string>[];
-}
 
 export default class NodeSyncPlugin extends Plugin {
 	settings: NodeSyncPluginSettings;
@@ -39,11 +28,11 @@ export default class NodeSyncPlugin extends Plugin {
 				// need to make a nice object to send to the BE
 				// it should have the file metadata so that a vault that is fetched can be rebuilt
 
-				const filesToPut: DataToPut = {
+				const filesToPut: VaultToSync = {
 					vault: "",
 					nodes: [],
 				};
-
+				console.log("files", files);
 				for (const file of files) {
 					try {
 						const content = await extractContent(file);
@@ -57,6 +46,8 @@ export default class NodeSyncPlugin extends Plugin {
 							name: file.name,
 							extension: file.extension,
 							path: file.path,
+							ctime: file.stat.ctime,
+							mtime: file.stat.mtime,
 						};
 
 						filesToPut.nodes.push(node);
@@ -68,16 +59,21 @@ export default class NodeSyncPlugin extends Plugin {
 				filesToPut.vault = this.app.vault.getName();
 
 				console.log("filesToPut", filesToPut);
-				fetch(this.url, {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(filesToPut),
-				})
-					.then((data) => data.json())
-					.then(console.log)
-					.catch(console.error);
+				try {
+					const req = await fetch(this.url, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(filesToPut),
+					});
+					if (req.ok) {
+						const data = await req.json();
+						console.log(data);
+					}
+				} catch (error) {
+					console.error(error);
+				}
 			},
 		});
 
@@ -85,11 +81,26 @@ export default class NodeSyncPlugin extends Plugin {
 		this.addCommand({
 			id: "get-vault-from-server",
 			name: "Get Vault",
-			callback: () => {
-				fetch(`${this.url}?vault=${this.settings.vaultToFetch}`)
-					.then((data) => data.json())
-					.then(console.log)
-					.catch(console.error);
+			callback: async () => {
+				if (!this.url || !this.settings.vaultToFetch) {
+					throw new Error(
+						"URL and vaultToFetch required. See settings for more details."
+					);
+				}
+				try {
+					const req = await fetch(
+						`${this.url}?vault=${this.settings.vaultToFetch}`
+					);
+					if (req.ok) {
+						const { name: vaultName, nodes } = await req.json();
+						nodes.forEach((node: Node) => {
+							//write the node back into the file
+							writeNodeToFile(node, vaultName, this.app.vault);
+						});
+					}
+				} catch (error) {
+					console.error(error);
+				}
 			},
 		});
 
