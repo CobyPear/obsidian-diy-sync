@@ -1,20 +1,20 @@
 {
   "name": "obsidian-sync-server",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
     "build": "tsc",
     "watch": "tsc --watch",
-    "dev": "pnpm watch & NODE_ENV=development pnpx nodemon ./build/server.js",
+    "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=production node server.js",
     "prisma:generate": "prisma generate --schema=./db/schema.prisma",
     "prisma:migrate-dev": "prisma migrate dev --schema=./db/schema.prisma"
   },
   "keywords": [],
-  "author": "",
+  "author": "CobyPear",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^4.1.1",
@@ -32,6 +32,7 @@
     "@typescript-eslint/parser": "^5.31.0",
     "dotenv": "^16.0.1",
     "eslint": "^8.20.0",
+    "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
     "prisma": "^4.1.1",
     "typescript": "^4.7.4"

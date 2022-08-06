@@ -1,15 +1,14 @@
 {
   "name": "obsidian-diy-sync",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Obsidian plugin that syncs data to an sqlite backed express.js server",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:server": "pnpm -F './server' dev",
     "dev:plugin": "pnpm -F './plugin' dev"
   },
   "keywords": [],
-  "author": "",
+  "author": "CobyPear",
   "license": "ISC",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.32.0",
