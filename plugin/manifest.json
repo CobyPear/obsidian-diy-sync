@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-nodejs-sync",
-	"name": "Nodejs Sync Plugin",
-	"version": "0.1.0",
-	"minAppVersion": "0.1.0",
-	"description": "This plugin allows you to sync your notes to a nodejs server with express and sqlite.",
-	"author": "CobyPear",
-	"authorUrl": "https://cobysher.dev",
-	"isDesktopOnly": false
+  "id": "obsidian-nodejs-sync",
+  "name": "Nodejs Sync Plugin",
+  "version": "0.1.0",
+  "minAppVersion": "0.1.0",
+  "description": "This plugin allows you to sync your notes to a nodejs server with express and sqlite.",
+  "author": "CobyPear",
+  "authorUrl": "https://cobysher.dev",
+  "isDesktopOnly": false
 }

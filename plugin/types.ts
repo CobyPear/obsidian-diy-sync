@@ -1,20 +1,20 @@
 export interface NodeSyncPluginSettings {
-	apiHost: string;
-	endpoint: string;
-	authToken?: string;
-	vaultToFetch?: string;
+  apiHost: string;
+  endpoint: string;
+  authToken?: string;
+  vaultToFetch?: string;
 }
 
 export interface Node {
-	content: string;
-	name: string;
-	extension: string;
-	path: string;
-	ctime: number;
-	mtime: number;
+  content: string;
+  name: string;
+  extension: string;
+  path: string;
+  ctime: number;
+  mtime: number;
 }
 
 export interface VaultToSync {
-	vault: string;
-	nodes: Node[];
+  vault: string;
+  nodes: Node[];
 }

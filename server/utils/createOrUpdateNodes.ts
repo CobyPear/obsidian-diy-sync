@@ -13,7 +13,7 @@ export const createOrUpdateNodes = async (
       extension: extension,
       path: path,
       ctime: ctime,
-      mtime: mtime
+      mtime: mtime,
     };
     if (create) {
       await prisma.node.create({

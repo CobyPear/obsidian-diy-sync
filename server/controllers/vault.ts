@@ -7,8 +7,9 @@ export const vaultControllers = {
     // get vault from DB
     // send it!
     const vault = req.query.vault as string;
+    console.log("vault", vault);
     const [vaultsFromDB] = await prisma.vault.findMany({
-      // where: { name: vault },
+      where: { name: vault },
       include: { nodes: true },
     });
     console.log(vaultsFromDB);

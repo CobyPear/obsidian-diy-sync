@@ -1,5 +1,3 @@
 import { vaultControllers } from "./vault";
 
-export {
-    vaultControllers
-}
+export { vaultControllers };

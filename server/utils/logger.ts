@@ -20,7 +20,7 @@ export const morganMiddleware = morgan(
     stream: {
       write: (message) => {
         // TODO: colorize based on status code
-        return logger.http(message)
+        return logger.http(message);
       },
     },
   }
