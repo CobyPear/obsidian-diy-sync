@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build:prod": "pnpm clean && pnpm prisma:migrate-prod && tsc",
+    "build:prod": "pnpm clean && pnpm prisma:migrate-deploy && tsc",
     "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
     "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
     "prisma:db-push-prod": "prisma push dev --schema./db/schema.prod.prisma",
