@@ -7,7 +7,7 @@
     "build:prod": "pnpm clean && pnpm prisma:db-push-prod && tsc",
     "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
     "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
-    "prisma:db-push-prod": "prisma db push --schema./db/schema.prod.prisma",
+    "prisma:db-push-prod": "prisma db push --accept-data-loss --schema./db/schema.prod.prisma",
     "prisma:generate-dev": "prisma generate --schema=./db/schema.dev.prisma",
     "prisma:generate-prod": "prisma generate --schema=./db/schema.prod.prisma",
     "prisma:migrate-dev": "prisma migrate dev --schema=./db/schema.dev.prisma",
