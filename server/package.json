@@ -11,7 +11,7 @@
     "prisma:generate-dev": "prisma generate --schema=./db/schema.dev.prisma",
     "prisma:generate-prod": "prisma generate --schema=./db/schema.prod.prisma",
     "prisma:migrate-dev": "prisma migrate dev --schema=./db/schema.dev.prisma",
-    "prisma:migrate-prod": "prisma migrate dev --schema=./db/schema.dev.prisma",
+    "prisma:migrate-deploy": "prisma migrate deploy --schema=./db/schema.prod.prisma",
     "start:prod": "NODE_ENV=production node ./build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc --watch"
