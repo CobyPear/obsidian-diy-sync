@@ -4,14 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "build:prod": "tsc",
     "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
-    "build": "tsc",
-    "watch": "tsc --watch",
     "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
+    "start:prod": "NODE_ENV=production node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node server.js",
-    "prisma:generate": "prisma generate --schema=./db/schema.prisma",
-    "prisma:migrate-dev": "prisma migrate dev --schema=./db/schema.prisma"
+    "watch": "tsc --watch",
+    "prisma:generate-dev": "prisma generate --schema=./db/schema.dev.prisma",
+    "prisma:migrate-dev": "prisma migrate dev --schema=./db/schema.dev.prisma",
+    "prisma:generate-prod": "prisma generate --schema=./db/schema.prod.prisma",
+    "prisma:migrate-prod": "prisma migrate dev --schema=./db/schema.dev.prisma"
   },
   "keywords": [],
   "author": "CobyPear",

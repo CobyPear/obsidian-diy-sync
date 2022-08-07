@@ -1,0 +1,19 @@
+services:
+  - type: web
+name: obsidian-node-sync-server
+disk:
+  name: data
+  mountPath: /data
+  sizeGB: 1
+env: node
+buildCommand: pnpm build:server
+startCommand: pnpm start:server
+# only build if anything in the server workspace changes
+# not the plugins
+buildFilter:
+  paths:
+    - server/**
+  ignoredPaths:
+    - server/db/*.db
+    - server/db/migrations/**
+    - plugin/**

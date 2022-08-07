@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:server": "pnpm -F './server' dev",
-    "dev:plugin": "pnpm -F './plugin' dev"
+    "dev:plugin": "pnpm -F './plugin' dev",
+    "build:server": "pnpm -F './server' build:prod",
+    "start:server:": "pnpm -F './server' start:prod"
   },
   "keywords": [],
   "author": "CobyPear",
