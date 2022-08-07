@@ -1,10 +1,6 @@
 services:
   - type: web
 name: obsidian-node-sync-server
-disk:
-  name: data
-  mountPath: /data
-  sizeGB: 1
 env: node
 buildCommand: pnpm build:server
 startCommand: pnpm start:server
@@ -17,3 +13,7 @@ buildFilter:
     - server/db/*.db
     - server/db/migrations/**
     - plugin/**
+disk:
+  name: data
+  mountPath: /data
+  sizeGB: 1
