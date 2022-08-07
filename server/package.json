@@ -4,16 +4,17 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build:prod": "pnpm clean && pnpm prisma:generate-prod && tsc",
+    "build:prod": "pnpm clean && pnpm prisma:migrate-prod && tsc",
     "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
     "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
+    "prisma:db-push-prod": "prisma push dev --schema./db/schema.prod.prisma",
+    "prisma:generate-dev": "prisma generate --schema=./db/schema.dev.prisma",
+    "prisma:generate-prod": "prisma generate --schema=./db/schema.prod.prisma",
+    "prisma:migrate-dev": "prisma migrate dev --schema=./db/schema.dev.prisma",
+    "prisma:migrate-prod": "prisma migrate dev --schema=./db/schema.dev.prisma",
     "start:prod": "NODE_ENV=production node ./build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "tsc --watch",
-    "prisma:generate-dev": "prisma generate --schema=./db/schema.dev.prisma",
-    "prisma:migrate-dev": "prisma migrate dev --schema=./db/schema.dev.prisma",
-    "prisma:generate-prod": "prisma generate --schema=./db/schema.prod.prisma",
-    "prisma:migrate-prod": "prisma migrate dev --schema=./db/schema.dev.prisma"
+    "watch": "tsc --watch"
   },
   "keywords": [],
   "author": "CobyPear",
