@@ -4,10 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build:prod": "tsc",
+    "build:prod": "pnpm clean && tsc && prisma:generate-prod",
     "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
     "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
-    "start:prod": "NODE_ENV=production node server.js",
+    "start:prod": "NODE_ENV=production node ./build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc --watch",
     "prisma:generate-dev": "prisma generate --schema=./db/schema.dev.prisma",

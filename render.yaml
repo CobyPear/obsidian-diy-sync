@@ -3,7 +3,7 @@ services:
     name: obsidian-node-sync-server
     env: node
     buildCommand: pnpm i && pnpm build:server
-    startCommand: pnpm start:server
+    startCommand: pnpm start:prod
     # only build if anything in the server workspace changes
     # not the plugins
     buildFilter:

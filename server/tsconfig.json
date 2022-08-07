@@ -10,6 +10,6 @@
     "alwaysStrict": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "outDir": "build"
+    "outDir": "build",
   }
 }
