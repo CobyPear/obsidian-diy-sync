@@ -1,4 +1,4 @@
-import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, Plugin, PluginSettingTab, Setting, Modal } from "obsidian";
 import { NodeSyncPluginSettings, VaultToSync, Node } from "types";
 import { extractContent } from "./utils/extractContent";
 import { writeNodeToFile } from "utils/writeNodeToFile";
@@ -103,6 +103,16 @@ export default class NodeSyncPlugin extends Plugin {
       },
     });
 
+    // LOGIN COMMAND
+    // This adds a simple command that can be triggered anywhere
+    this.addCommand({
+      id: "open-sample-modal-simple",
+      name: "Open sample modal (simple)",
+      callback: () => {
+        new LoginModal(this.app, this.settings.apiHost).open();
+      },
+    });
+
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new SampleSettingTab(this.app, this));
   }
@@ -178,5 +188,76 @@ class SampleSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
+  }
+}
+
+class LoginModal extends Modal {
+  username: string;
+  password: string;
+  url: string;
+  isWarningShown = false;
+
+  constructor(app: App, url: string) {
+    super(app);
+    this.url = url;
+  }
+
+  onSubmit(username: string, password: string) {
+    // POST to /api/login
+    // if 200 response, the token should be accessable in a cookie?
+    console.log(this.username, this.password);
+  }
+
+  onOpen() {
+    const { contentEl, containerEl } = this;
+    contentEl.addClass('login-modal')
+    contentEl.createEl("h1", { text: `Login to ${this.url}` });
+    // Username input control
+    new Setting(contentEl).setName("Username").addText((text) =>
+      text.onChange((value) => {
+        this.username = value;
+      })
+    );
+
+    // Password input control
+    new Setting(contentEl).setName("Password").addText((text) => {
+      text.inputEl.type = "password";
+      return text.onChange((value) => {
+        this.password = value;
+      });
+    });
+
+    // Login button
+    new Setting(contentEl).addButton((btn) =>
+      btn
+        .setButtonText("Login")
+        .setCta()
+        .onClick(() => {
+          console.log(this.isWarningShown);
+          // Show an error to the user that credentials are missing
+          if (!this.password || !this.username) {
+            if (!this.isWarningShown) {
+              const warning = contentEl.createEl("span", {
+                text: "Missing credentials. Please input username and password.",
+                cls: ["warning", "fade-in", "fade-out"]
+              });
+              this.isWarningShown = true;
+          
+              setTimeout(() => {
+                this.contentEl.removeChild(warning);
+                this.isWarningShown = false;
+              }, 5000);
+            }
+          } else {
+            this.close();
+            this.onSubmit(this.username, this.password);
+          }
+        })
+    );
+  }
+
+  onClose() {
+    const { contentEl } = this;
+    contentEl.empty();
   }
 }

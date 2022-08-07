@@ -1,0 +1,35 @@
+
+.warning {
+    display: flex;
+    margin: 0 4px;
+    padding: 12px;
+    background-color: #d1c1c1;
+    color: #ff0000;
+}
+.warning::before {
+    content: "\26A0\0020"
+}
+.fade-in {
+    animation: fade-in 3s;
+}
+.fade-out {
+    animation: fade-out 3s;
+    animation-delay: 3s
+}
+
+@keyframes fade-in {
+    0%{
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes fade-out {
+    0%{
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
