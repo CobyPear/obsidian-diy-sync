@@ -17,5 +17,8 @@
     "@typescript-eslint/parser": "^5.32.0",
     "eslint": "^8.20.0",
     "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "prisma": "^4.1.1"
   }
 }

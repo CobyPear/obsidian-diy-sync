@@ -23,6 +23,6 @@ model Node {
     extension String
     name      String
     path      String
-    ctime     Int
-    mtime     Int
+    ctime     String
+    mtime     String
 }

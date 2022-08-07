@@ -8,6 +8,9 @@ importers:
       '@typescript-eslint/parser': ^5.32.0
       eslint: ^8.20.0
       prettier: ^2.7.1
+      prisma: ^4.1.1
+    dependencies:
+      prisma: 4.1.1
     devDependencies:
       '@typescript-eslint/eslint-plugin': 5.32.0_u54i2zwnyr77bua47cradpdvoe
       '@typescript-eslint/parser': 5.32.0_he2ccbldppg44uulnyq4rwocfa

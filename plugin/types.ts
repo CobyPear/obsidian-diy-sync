@@ -10,8 +10,8 @@ export interface Node {
   name: string;
   extension: string;
   path: string;
-  ctime: number;
-  mtime: number;
+  ctime: string;
+  mtime: string;
 }
 
 export interface VaultToSync {

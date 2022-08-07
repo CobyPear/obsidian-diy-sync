@@ -43,8 +43,8 @@ export default class NodeSyncPlugin extends Plugin {
               name: file.name,
               extension: file.extension,
               path: file.path,
-              ctime: file.stat.ctime,
-              mtime: file.stat.mtime,
+              ctime: file.stat.ctime.toString(),
+              mtime: file.stat.mtime.toString(),
             };
             filesToPut.nodes.push(node);
           } catch (error) {
