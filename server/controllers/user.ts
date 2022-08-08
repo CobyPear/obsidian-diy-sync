@@ -21,7 +21,13 @@ export const userControllers = {
       });
 
       // send response to user
-      res.json({ message: "User created!", user: newUser });
+      res.json({
+        message: "User created!",
+        user: {
+          id: newUser.id,
+          username: newUser.username,
+        },
+      });
     } catch (error) {
       // if error, send error
       console.error(error);

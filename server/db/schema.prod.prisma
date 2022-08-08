@@ -13,6 +13,13 @@ model User {
     password String
 }
 
+model Session {
+    id        String   @id
+    sid       String   @unique
+    data      String
+    expiresAt DateTime
+}
+
 model Vault {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())

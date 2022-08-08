@@ -1,7 +1,8 @@
-import { App, Plugin, PluginSettingTab, Setting, Modal } from "obsidian";
+import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { NodeSyncPluginSettings, VaultToSync, Node } from "types";
 import { extractContent } from "./utils/extractContent";
 import { writeNodeToFile } from "utils/writeNodeToFile";
+import { LoginModal } from "components/modals";
 
 const DEFAULT_SETTINGS: NodeSyncPluginSettings = {
   apiHost: "http://localhost:3001",
@@ -109,7 +110,17 @@ export default class NodeSyncPlugin extends Plugin {
       id: "open-login-modal",
       name: "Login to Server",
       callback: () => {
-        new LoginModal(this.app, this.settings.apiHost).open();
+        new LoginModal(this.app, this.settings.apiHost, "login").open();
+      },
+    });
+
+    // CREATE USER COMMAND
+    // This adds a simple command that can be triggered anywhere
+    this.addCommand({
+      id: "open-create-user-modal",
+      name: "Create New User",
+      callback: () => {
+        new LoginModal(this.app, this.settings.apiHost, "user").open();
       },
     });
 
@@ -188,90 +199,5 @@ class SampleSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
-  }
-}
-
-class LoginModal extends Modal {
-  username: string;
-  password: string;
-  url: string;
-  isWarningShown = false;
-
-  constructor(app: App, url: string) {
-    super(app);
-    this.url = url;
-  }
-
-  onSubmit(username: string, password: string) {
-    // POST to /api/login
-    // if 200 response, the token should be accessable in a cookie?
-    // otherwise, open a new modal with the error
-    fetch(`${this.url}/api/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          return new Error(data.error);
-        }
-        console.log("data: ", data);
-      })
-      .catch(console.error);
-  }
-
-  onOpen() {
-    const { contentEl, containerEl } = this;
-    contentEl.addClass("login-modal");
-    contentEl.createEl("h1", { text: `Login to ${this.url}` });
-    // Username input control
-    new Setting(contentEl).setName("Username").addText((text) =>
-      text.onChange((value) => {
-        this.username = value;
-      })
-    );
-
-    // Password input control
-    new Setting(contentEl).setName("Password").addText((text) => {
-      text.inputEl.type = "password";
-      return text.onChange((value) => {
-        this.password = value;
-      });
-    });
-
-    // Login button
-    new Setting(contentEl).addButton((btn) =>
-      btn
-        .setButtonText("Login")
-        .setCta()
-        .onClick(() => {
-          // Show an error to the user that credentials are missing
-          if (!this.password || !this.username) {
-            if (!this.isWarningShown) {
-              const warning = contentEl.createEl("span", {
-                text: "Missing credentials. Please input username and password.",
-                cls: ["warning", "fade-in", "fade-out"],
-              });
-              this.isWarningShown = true;
-
-              setTimeout(() => {
-                this.contentEl.removeChild(warning);
-                this.isWarningShown = false;
-              }, 5000);
-            }
-          } else {
-            this.close();
-            this.onSubmit(this.username, this.password);
-          }
-        })
-    );
-  }
-
-  onClose() {
-    const { contentEl } = this;
-    contentEl.empty();
   }
 }
