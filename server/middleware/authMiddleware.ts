@@ -1,15 +1,14 @@
 // TODO: implement jwt auth middleware
-import type { Response, NextFunction } from "express";
-import { RequestWithUser } from "../types";
+import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = async (
-  req: RequestWithUser,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers["authorization"];
+    const authHeader = req.header("Authorization");
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) return res.sendStatus(401);
@@ -20,6 +19,8 @@ export const authMiddleware = async (
     }
     next();
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({
+      error,
+    });
   }
 };
