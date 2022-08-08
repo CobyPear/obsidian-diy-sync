@@ -13,6 +13,7 @@ const host = process.env.HOST || "localhost";
 const corsOptions: CorsOptions = {
   allowedHeaders: ["Origin", "Content-Type"],
   methods: "GET,OPTIONS,POST,PUT",
+  origin: process.env.HOST || "app://obsidian.md"
 };
 app.use(express.json());
 app.use(cors(corsOptions));

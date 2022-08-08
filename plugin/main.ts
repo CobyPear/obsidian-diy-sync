@@ -106,8 +106,8 @@ export default class NodeSyncPlugin extends Plugin {
     // LOGIN COMMAND
     // This adds a simple command that can be triggered anywhere
     this.addCommand({
-      id: "open-sample-modal-simple",
-      name: "Open sample modal (simple)",
+      id: "open-login-modal",
+      name: "Login to Server",
       callback: () => {
         new LoginModal(this.app, this.settings.apiHost).open();
       },
@@ -205,12 +205,27 @@ class LoginModal extends Modal {
   onSubmit(username: string, password: string) {
     // POST to /api/login
     // if 200 response, the token should be accessable in a cookie?
-    console.log(this.username, this.password);
+    // otherwise, open a new modal with the error
+    fetch(`${this.url}/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          return new Error(data.error);
+        }
+        console.log("data: ", data);
+      })
+      .catch(console.error);
   }
 
   onOpen() {
     const { contentEl, containerEl } = this;
-    contentEl.addClass('login-modal')
+    contentEl.addClass("login-modal");
     contentEl.createEl("h1", { text: `Login to ${this.url}` });
     // Username input control
     new Setting(contentEl).setName("Username").addText((text) =>
@@ -233,16 +248,15 @@ class LoginModal extends Modal {
         .setButtonText("Login")
         .setCta()
         .onClick(() => {
-          console.log(this.isWarningShown);
           // Show an error to the user that credentials are missing
           if (!this.password || !this.username) {
             if (!this.isWarningShown) {
               const warning = contentEl.createEl("span", {
                 text: "Missing credentials. Please input username and password.",
-                cls: ["warning", "fade-in", "fade-out"]
+                cls: ["warning", "fade-in", "fade-out"],
               });
               this.isWarningShown = true;
-          
+
               setTimeout(() => {
                 this.contentEl.removeChild(warning);
                 this.isWarningShown = false;

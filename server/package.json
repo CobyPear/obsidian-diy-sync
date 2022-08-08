@@ -2,16 +2,11 @@
   "name": "obsidian-sync-server",
   "version": "0.1.0",
   "description": "",
-  "main": "server.js",
+  "main": "./build/server.js",
   "scripts": {
-    "build:prod": "pnpm prisma:generate-prod && tsc",
+    "build:prod": "pnpm prisma generate schema=./server/db/schema.prod.prisma && tsc",
     "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
     "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
-    "prisma:db-push-prod": "prisma db push --force-reset --accept-data-loss --schema=./db/schema.prod.prisma",
-    "prisma:generate-dev": "prisma generate --schema=./db/schema.dev.prisma",
-    "prisma:generate-prod": "prisma generate --schema=./db/schema.prod.prisma",
-    "prisma:migrate-dev": "prisma migrate dev --schema=./db/schema.dev.prisma",
-    "prisma:migrate-deploy": "prisma migrate deploy --schema=./db/schema.prod.prisma",
     "start:prod": "NODE_ENV=production node ./build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc --watch"
@@ -21,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^4.1.1",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "morgan": "^1.10.0",
@@ -28,6 +24,7 @@
     "winston": "^3.8.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/morgan": "^1.9.3",

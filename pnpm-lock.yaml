@@ -40,11 +40,13 @@ importers:
   server:
     specifiers:
       '@prisma/client': ^4.1.1
+      '@types/bcrypt': ^5.0.0
       '@types/cors': ^2.8.12
       '@types/express': ^4.17.13
       '@types/morgan': ^1.9.3
       '@typescript-eslint/eslint-plugin': ^5.31.0
       '@typescript-eslint/parser': ^5.31.0
+      bcrypt: ^5.0.1
       cors: ^2.8.5
       dotenv: ^16.0.1
       eslint: ^8.20.0
@@ -58,12 +60,14 @@ importers:
       winston: ^3.8.1
     dependencies:
       '@prisma/client': 4.1.1_prisma@4.1.1
+      bcrypt: 5.0.1
       cors: 2.8.5
       express: 4.18.1
       morgan: 1.10.0
       sqlite3: 5.0.11
       winston: 3.8.1
     devDependencies:
+      '@types/bcrypt': 5.0.0
       '@types/cors': 2.8.12
       '@types/express': 4.17.13
       '@types/morgan': 1.9.3
@@ -223,6 +227,12 @@ packages:
     engines: {node: '>= 6'}
     dev: false
     optional: true
+
+  /@types/bcrypt/5.0.0:
+    resolution: {integrity: sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==}
+    dependencies:
+      '@types/node': 18.6.3
+    dev: true
 
   /@types/body-parser/1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
@@ -818,6 +828,18 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       safe-buffer: 5.1.2
+    dev: false
+
+  /bcrypt/5.0.1:
+    resolution: {integrity: sha512-9BTgmrhZM2t1bNuDtrtIMVSmmxZBrJ71n8Wg+YgdjHuIWYF7SjjmCPZFB+/5i/o/PIeRpwVJR3P+NrpIItUjqw==}
+    engines: {node: '>= 10.0.0'}
+    requiresBuild: true
+    dependencies:
+      '@mapbox/node-pre-gyp': 1.0.9
+      node-addon-api: 3.2.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
     dev: false
 
   /binary-extensions/2.2.0:
@@ -2141,6 +2163,10 @@ packages:
   /negotiator/0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
+    dev: false
+
+  /node-addon-api/3.2.1:
+    resolution: {integrity: sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==}
     dev: false
 
   /node-addon-api/4.3.0:
