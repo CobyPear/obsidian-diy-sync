@@ -59,6 +59,7 @@ export default class NodeSyncPlugin extends Plugin {
         try {
           const res = await fetch(this.url, {
             method: "PUT",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
@@ -87,7 +88,10 @@ export default class NodeSyncPlugin extends Plugin {
         try {
           console.log(`Fetching ${this.settings.vaultToFetch}...`);
           const res = await fetch(
-            `${this.url}?vault=${this.settings.vaultToFetch}`
+            `${this.url}?vault=${this.settings.vaultToFetch}`,
+            {
+              credentials: "include",
+            }
           );
           if (res.ok) {
             const { name: vaultName, nodes } = await res.json();

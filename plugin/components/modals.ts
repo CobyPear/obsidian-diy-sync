@@ -24,6 +24,7 @@ export class LoginModal extends Modal {
     // otherwise, open a new modal with the error
     fetch(`${this.url}/api/${this.modalType}`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -31,9 +32,6 @@ export class LoginModal extends Modal {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) {
-          return new Error(data.error);
-        }
         console.log("data: ", data);
       })
       .catch(console.error);

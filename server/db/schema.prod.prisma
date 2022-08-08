@@ -8,16 +8,11 @@ generator client {
 }
 
 model User {
-    id       Int    @id @default(autoincrement())
-    username String @unique
-    password String
-}
-
-model Session {
-    id        String   @id
-    sid       String   @unique
-    data      String
-    expiresAt DateTime
+    id           Int     @id @default(autoincrement())
+    username     String  @unique
+    password     String
+    Vaults       Vault[]
+    refreshToken String
 }
 
 model Vault {
@@ -25,6 +20,8 @@ model Vault {
     createdAt DateTime @default(now())
     name      String
     nodes     Node[]
+    User      User?    @relation(fields: [userId], references: [id])
+    userId    Int?
 }
 
 // A node is something in a vault

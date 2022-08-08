@@ -1,34 +1,23 @@
+import type { CorsOptions } from "cors";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import expressSession from "express-session";
-import type { CorsOptions } from "cors";
-import { prismaSession } from "./db";
+
 import { morganMiddleware } from "./utils/logger";
 import { routes } from "./routes";
+
 dotenv.config();
 export const app = express();
 const port = process.env.PORT || 8080;
 const host = process.env.HOST || "localhost";
 
 const corsOptions: CorsOptions = {
-  allowedHeaders: ["Origin", "Content-Type"],
+  allowedHeaders: ["Origin", "Content-Type", "Set-Cookie"],
   methods: "GET,OPTIONS,POST,PUT",
   origin: process.env.HOST || "app://obsidian.md",
+  credentials: true,
 };
 
-// session middleware
-app.use(
-  expressSession({
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-    },
-    secret: process.env.SESSION_SECRET as string,
-    resave: true,
-    saveUninitialized: true,
-    store: prismaSession,
-  })
-);
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(morganMiddleware);
