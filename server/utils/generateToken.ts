@@ -5,11 +5,12 @@ type TokenType = "access" | "refresh";
 
 export const generateToken = (
   userId: number,
+  username: string,
   expiresIn: string,
   type: TokenType
 ) => {
   const token = jwt.sign(
-    { userId: userId },
+    { userId, username },
     // JWT_REFRESH_TOKEN || JWT_ACCESS_TOKEN
     process.env[`JWT_${type.toUpperCase()}_SECRET`] as string,
     {
@@ -23,7 +24,9 @@ export const generateToken = (
       where: {
         id: userId,
       },
-      data:  {},
+      data: {
+        refreshToken: token,
+      }
     });
   }
 

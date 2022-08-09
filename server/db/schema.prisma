@@ -12,7 +12,7 @@ model User {
     username    String  @unique
     password    String
     Vaults      Vault[]
-    refrehToken String
+    refreshToken String?
 }
 
 model Vault {

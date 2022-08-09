@@ -7,6 +7,7 @@ export const writeNodeToFile = async (
   vault: Vault
 ) => {
   const currentVault = vault.getName();
+  console.log(node)
   if (vaultName !== currentVault) {
     // We don't want to create a new vault for the user, instead make sure they start in the
     // same dir as the vault they are trying to fetch
@@ -15,7 +16,7 @@ export const writeNodeToFile = async (
     );
   }
 
-  const vaultPath = path.join(process.cwd(), vault.getRoot().path);
+  const vaultPath = path.join(vault.getRoot().path);
   // If the file doesn't already exist, write it!
   if (!vault.getAbstractFileByPath(path.join(vaultPath, node.path))) {
     try {
@@ -33,6 +34,8 @@ export const writeNodeToFile = async (
       }
       // Swallow the error?
       // eslint-disable-next-line no-empty
-    } catch (error) {}
+    } catch (error) {
+      console.error(error)
+    }
   }
 };

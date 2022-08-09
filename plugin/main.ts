@@ -1,8 +1,9 @@
-import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, Modal, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { NodeSyncPluginSettings, VaultToSync, Node } from "types";
 import { extractContent } from "./utils/extractContent";
 import { writeNodeToFile } from "utils/writeNodeToFile";
-import { LoginModal } from "components/modals";
+import { LoginModal, MessageModal } from "components/modals";
+import { refreshToken } from "utils/refreshToken";
 
 const DEFAULT_SETTINGS: NodeSyncPluginSettings = {
   apiHost: "http://localhost:3001",
@@ -65,9 +66,12 @@ export default class NodeSyncPlugin extends Plugin {
             },
             body: JSON.stringify(filesToPut),
           });
-          if (res.ok) {
+          const user = window.localStorage.getItem("user");
+          if (!res.ok && user) {
+            refreshToken(this.settings.apiHost, user);
+          } else if (res.ok) {
             const data = await res.json();
-            console.log(data);
+            console.log("data from fetch: ", data);
           }
         } catch (error) {
           console.error(error);
@@ -93,7 +97,10 @@ export default class NodeSyncPlugin extends Plugin {
               credentials: "include",
             }
           );
-          if (res.ok) {
+          const user = window.localStorage.getItem("user");
+          if (!res.ok && user) {
+            refreshToken(this.settings.apiHost, user);
+          } else if (res.ok) {
             const { name: vaultName, nodes } = await res.json();
             Promise.all(
               nodes.map(async (node: Node) => {
@@ -108,23 +115,54 @@ export default class NodeSyncPlugin extends Plugin {
       },
     });
 
-    // LOGIN COMMAND
-    // This adds a simple command that can be triggered anywhere
+    // LOGIN USER COMMAND
     this.addCommand({
       id: "open-login-modal",
       name: "Login to Server",
-      callback: () => {
-        new LoginModal(this.app, this.settings.apiHost, "login").open();
+      callback: async () => {
+        const loginModal = new LoginModal(
+          this.app,
+          this,
+          this.settings.apiHost,
+          "login"
+        );
+        loginModal.open();
       },
     });
 
     // CREATE USER COMMAND
-    // This adds a simple command that can be triggered anywhere
     this.addCommand({
       id: "open-create-user-modal",
       name: "Create New User",
-      callback: () => {
-        new LoginModal(this.app, this.settings.apiHost, "user").open();
+      callback: async () => {
+        const loginModal = new LoginModal(
+          this.app,
+          this,
+          this.settings.apiHost,
+          "user"
+        );
+        loginModal.open();
+      },
+    });
+
+    // LOGOUT USER DOMMAND
+    this.addCommand({
+      id: "logout-user",
+      name: "Logout User",
+      callback: async () => {
+        const username = window.localStorage.getItem("user");
+        if (username) {
+          const res = await fetch(`${this.settings.apiHost}/api/logout`, {
+            method: "POST",
+            body: JSON.stringify({ username }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            console.log(data);
+            // TODO: delete cookie from the client side
+            new MessageModal(this.app, data.message).open();
+          }
+        }
       },
     });
 

@@ -4,21 +4,28 @@ import { createOrUpdateNodes } from "../utils/createOrUpdateNodes";
 
 export const vaultControllers = {
   get: async (req: Request, res: Response) => {
-    // get vault from DB
-    // send it!
     const vault = req.query.vault as string;
     console.log("vault", vault);
-    const [vaultsFromDB] = await prisma.vault.findMany({
-      where: { name: vault },
-      include: { nodes: true },
-    });
-    console.log(vaultsFromDB);
-    if (!vaultsFromDB) {
+    const errorMessage = `No vault ${vault} to send. Check the vault name and make sure you've sync'd at least once.`;
+    try {
+      // get vault from DB
+      // send it!
+      const [vaultsFromDB] = await prisma.vault.findMany({
+        where: { name: vault },
+        include: { nodes: true },
+      });
+      console.log("vaultsFromDb", vaultsFromDB);
+      if (!vaultsFromDB) {
+        res.status(404).json({
+          error: errorMessage,
+        });
+      }
+      res.json(vaultsFromDB);
+    } catch (error) {
       res.status(404).json({
-        error: `No vault ${vault} to send. Check the vault name and make sure you've sync'd at least once.`,
+        error: errorMessage,
       });
     }
-    res.json(vaultsFromDB);
   },
   put: async (req: Request, res: Response) => {
     try {

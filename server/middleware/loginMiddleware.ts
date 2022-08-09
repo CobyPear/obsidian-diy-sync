@@ -26,27 +26,25 @@ export const loginMiddleware = async (
     });
   }
 
-  const accessToken = generateToken(user.id, "15m", "access");
-  const refreshToken = generateToken(user.id, "7d", "refresh");
+  if (user && user.id) {
+    const accessToken = generateToken(user.id, user.username, "15m", "access");
+    const refreshToken = generateToken(user.id, user.username, "7d", "refresh");
 
-  res.cookie("access-token", accessToken, {
-    maxAge: 15 * 60 * 1000, // 15 min
-    sameSite: "none",
-    secure: true,
-    httpOnly: true,
-  });
-  res.cookie("refresh_token", refreshToken, {
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-    sameSite: "none",
-    secure: true,
-    httpOnly: true,
-  });
+    res.cookie("access_token", accessToken, {
+      maxAge: 15 * 60 * 1000, // 15 min
+      sameSite: "none",
+      secure: true,
+      httpOnly: true,
+      path: "/admin",
+    });
+    res.cookie("refresh_token", refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      sameSite: "none",
+      secure: true,
+      httpOnly: true,
+      path: "/admin",
+    });
 
-  // add the refresh token to the DB
-  user.update({
-    data: {
-      refreshToken: refreshToken + accessToken,
-    },
-  });
-  next();
+    next();
+  }
 };

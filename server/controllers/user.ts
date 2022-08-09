@@ -20,9 +20,21 @@ export const userControllers = {
           password: hashedPw,
         },
       });
+      console.log("newUser", newUser);
 
-      const accessToken = generateToken(newUser.id, "15m", "access");
-      const refreshToken = generateToken(newUser.id, "7d", "refresh");
+      const accessToken = generateToken(
+        newUser.id,
+        newUser.username,
+        "15m",
+        "access"
+      );
+      const refreshToken = generateToken(
+        newUser.id,
+        newUser.username,
+        "7d",
+        "refresh"
+      );
+      console.log("tokens", accessToken, refreshToken);
 
       if (accessToken && refreshToken) {
         res.cookie("access_token", accessToken, {
@@ -30,19 +42,20 @@ export const userControllers = {
           sameSite: "none",
           secure: true,
           httpOnly: true,
+          path: "/admin",
         });
         res.cookie("refresh_token", refreshToken, {
           maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
           sameSite: "none",
           secure: true,
           httpOnly: true,
+          path: "/admin",
         });
 
         // send response to user
         res.json({
           message: "User created!",
           user: {
-            id: newUser.id,
             username: newUser.username,
           },
         });
@@ -54,12 +67,10 @@ export const userControllers = {
           prismaError: error,
         });
       } else {
+        console.error(error);
         // if error, send error
         res.status(500).json({ prismaError: error });
       }
     }
   },
-  token: {
-    get: {}
-  }
 };

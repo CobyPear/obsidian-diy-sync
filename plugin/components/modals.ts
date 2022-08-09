@@ -1,3 +1,4 @@
+import NodeSyncPlugin from "main";
 import { Modal, App, Setting } from "obsidian";
 
 type modalType = "user" | "login";
@@ -7,13 +8,20 @@ export class LoginModal extends Modal {
   password: string;
   confirmPass: string;
   url: string;
+  plugin: NodeSyncPlugin;
   // is this a login modal
   // or a create user modal?
   modalType: modalType;
   isWarningShown = false;
 
-  constructor(app: App, url: string, modalType: modalType) {
+  constructor(
+    app: App,
+    plugin: NodeSyncPlugin,
+    url: string,
+    modalType: modalType
+  ) {
     super(app);
+    this.plugin = plugin;
     this.url = url;
     this.modalType = modalType;
   }
@@ -31,10 +39,15 @@ export class LoginModal extends Modal {
       body: JSON.stringify({ username, password }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(async (data) => {
         console.log("data: ", data);
+        await this.setCurrentUser(data.username);
       })
       .catch(console.error);
+  }
+
+  setCurrentUser(username: string) {
+    window.localStorage.setItem("user", username);
   }
 
   onOpen() {
@@ -120,6 +133,24 @@ export class LoginModal extends Modal {
             }
           })
       );
+  }
+
+  onClose() {
+    const { contentEl } = this;
+    contentEl.empty();
+  }
+}
+
+export class MessageModal extends Modal {
+  message: string;
+  constructor(app: App, message: string) {
+    super(app);
+    this.message = message;
+  }
+
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.setText(this.message);
   }
 
   onClose() {

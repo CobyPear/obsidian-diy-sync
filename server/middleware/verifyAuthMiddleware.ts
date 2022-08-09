@@ -1,4 +1,3 @@
-// TODO: implement jwt auth middleware
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { ReqUser } from "../types";
@@ -9,19 +8,38 @@ export const verifyAuthMiddleware = async (
   next: NextFunction
 ) => {
   try {
-    const cookie = req.get("cookie"); // get the cookie header
-    const token = cookie?.split("access_token=")[1];
+    // get the cookie header
+    const cookie = req.get("cookie");
+    console.log(cookie);
+    if (!cookie) res.status(401).json({ message: "Not Authorized" });
+    // grab the access token from the header
+    const matches = /^access_token=(?<accessToken>.*);/g.exec(cookie as string);
+    if (matches && matches.groups) {
+      const accessToken = matches.groups.accessToken;
 
-    if (!token) return res.sendStatus(401);
+      if (!accessToken) res.status(401).json({ message: "Not Authorized" });
 
-    const user = jwt.verify(token, process.env.JWT_SECRET as string) as ReqUser;
-    if (user) {
-      req.user = user;
+      const user = jwt.verify(
+        accessToken,
+        process.env.JWT_ACCESS_SECRET as string
+      ) as ReqUser;
+      if (user) {
+        req.user = user;
+      } else {
+        res.status(401).json({ message: "Not Authorized" });
+      }
+      next();
+    } else {
+      // if we're reaching this point it's likely the access_token is expired.
+      // Does it make sense to make the refresh endpoint a middleware instead
+      // and call next() here instead? Then we could send 401 only if
+      // the refresh token is expired
+      res.status(401).json({ message: "Not Authorized" });
     }
-    next();
   } catch (error) {
-    return res.status(500).json({
-      error,
+    console.error(error);
+    res.status(500).json({
+      error: error,
     });
   }
 };
