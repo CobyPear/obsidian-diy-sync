@@ -40,8 +40,10 @@ export class LoginModal extends Modal {
     })
       .then((res) => res.json())
       .then(async (data) => {
-        console.log("data: ", data);
-        await this.setCurrentUser(data.username);
+        if (!data.username) {
+          return new MessageModal(this.app, data.message).open();
+        }
+        this.setCurrentUser(data.username);
       })
       .catch(console.error);
   }
@@ -90,7 +92,7 @@ export class LoginModal extends Modal {
               if (!this.isWarningShown) {
                 const warning = contentEl.createEl("span", {
                   text: "Passwords do not match. Please confirm passwords match and try again.",
-                  cls: ["warning", "fade-in", "fade-out"],
+                  cls: ["warning", "fade-out"],
                 });
                 this.isWarningShown = true;
 
@@ -100,8 +102,8 @@ export class LoginModal extends Modal {
                 }, 5000);
               }
             } else {
-              this.close();
               this.onSubmit(this.username, this.password);
+              this.close();
             }
           })
       );

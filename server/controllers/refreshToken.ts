@@ -5,37 +5,36 @@ import jwt from "jsonwebtoken";
 
 export const refreshControllers = {
   post: async (req: Request, res: Response) => {
-    
+    // TODO: Make this composable :eyes:
     const cookie = req.get("cookie");
-    const matches = /refresh_token=(?<refreshToken>.*);/g.exec(
+    const matches = /refresh_token=(?<refreshToken>.*);?/g.exec(
       cookie as string
-      );
-      if (matches && matches.groups) {
-        const refreshToken = matches.groups.refreshToken;
-        
-        const user = await prisma.user.findUnique({
-          where: {
-            username: req.body.username,
-          },
-          select: {
-            id: true,
-            username: true,
-            refreshToken: true,
-          },
-        });
+    );
+    if (matches && matches.groups) {
+      const refreshToken = matches.groups.refreshToken;
+      const user = await prisma.user.findUnique({
+        where: {
+          username: req.body.username,
+        },
+        select: {
+          id: true,
+          username: true,
+          refreshToken: true,
+        },
+      });
       if (user?.refreshToken === refreshToken) {
         const isValid = jwt.verify(
           refreshToken,
           process.env.JWT_REFRESH_SECRET as string
         );
         if (isValid) {
-          const newAccessToken = generateToken(
+          const newAccessToken = await generateToken(
             user.id,
             user.username,
             "15m",
             "access"
           );
-          const newRefreshToken = generateToken(
+          const newRefreshToken = await generateToken(
             user.id,
             user.username,
             "7d",
@@ -55,8 +54,12 @@ export const refreshControllers = {
             httpOnly: true,
           });
 
-          res.json({ message: "Tokens Refreshed" });
+          return res.json({ message: "Tokens Refreshed" });
         }
+      } else {
+        return res
+          .status(401)
+          .json({ message: "Session expired. Please log in again." });
       }
     }
   },

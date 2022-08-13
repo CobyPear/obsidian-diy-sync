@@ -20,21 +20,19 @@ export const userControllers = {
           password: hashedPw,
         },
       });
-      console.log("newUser", newUser);
 
-      const accessToken = generateToken(
+      const accessToken = await generateToken(
         newUser.id,
         newUser.username,
         "15m",
         "access"
       );
-      const refreshToken = generateToken(
+      const refreshToken = await generateToken(
         newUser.id,
         newUser.username,
         "7d",
         "refresh"
       );
-      console.log("tokens", accessToken, refreshToken);
 
       if (accessToken && refreshToken) {
         res.cookie("access_token", accessToken, {
@@ -42,14 +40,12 @@ export const userControllers = {
           sameSite: "none",
           secure: true,
           httpOnly: true,
-          path: "/admin",
         });
         res.cookie("refresh_token", refreshToken, {
           maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
           sameSite: "none",
           secure: true,
           httpOnly: true,
-          path: "/admin",
         });
 
         // send response to user

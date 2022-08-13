@@ -5,7 +5,6 @@ import { createOrUpdateNodes } from "../utils/createOrUpdateNodes";
 export const vaultControllers = {
   get: async (req: Request, res: Response) => {
     const vault = req.query.vault as string;
-    console.log("vault", vault);
     const errorMessage = `No vault ${vault} to send. Check the vault name and make sure you've sync'd at least once.`;
     try {
       // get vault from DB
@@ -14,7 +13,6 @@ export const vaultControllers = {
         where: { name: vault },
         include: { nodes: true },
       });
-      console.log("vaultsFromDb", vaultsFromDB);
       if (!vaultsFromDB) {
         res.status(404).json({
           error: errorMessage,
@@ -48,12 +46,10 @@ export const vaultControllers = {
 
         if (foundVault) {
           console.log(`Found vault ${vault} Adding nodes...`);
-          resultVault =
-            foundVault.nodes.length === 0
-              ? // create the nodes if there are none!
-                await createOrUpdateNodes(nodes, foundVault.id, true)
-              : // else, update them
-                await createOrUpdateNodes(nodes, foundVault.id);
+          resultVault = await createOrUpdateNodes({
+            nodes,
+            vaultId: foundVault.id,
+          });
         } else {
           const newVault = await prisma.vault.create({
             data: {
@@ -61,7 +57,10 @@ export const vaultControllers = {
               userId: req.user.userId,
             },
           });
-          resultVault = await createOrUpdateNodes(nodes, newVault.id, true);
+          resultVault = await createOrUpdateNodes({
+            nodes,
+            vaultId: newVault.id,
+          });
         }
         res.json({ message: "success", vault: resultVault });
       } else {

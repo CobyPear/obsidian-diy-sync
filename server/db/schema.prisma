@@ -8,10 +8,10 @@ generator client {
 }
 
 model User {
-    id          Int     @id @default(autoincrement())
-    username    String  @unique
-    password    String
-    Vaults      Vault[]
+    id           Int     @id @default(autoincrement())
+    username     String  @unique
+    password     String
+    Vaults       Vault[]
     refreshToken String?
 }
 
@@ -27,12 +27,12 @@ model Vault {
 // A node is something in a vault
 model Node {
     id        Int    @id @default(autoincrement())
-    Vault     Vault? @relation(fields: [vaultId], references: [id])
-    vaultId   Int?
+    Vault     Vault  @relation(fields: [vaultId], references: [id])
+    vaultId   Int
     content   String
     extension String
     name      String
-    path      String
+    path      String @unique
     ctime     String
     mtime     String
 }

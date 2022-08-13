@@ -56,9 +56,8 @@ export default class NodeSyncPlugin extends Plugin {
         // add the name so we know which vault to update on the server
         filesToPut.vault = this.app.vault.getName();
 
-        console.log("filesToPut", filesToPut);
         try {
-          const res = await fetch(this.url, {
+          let res = await fetch(this.url, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -66,12 +65,37 @@ export default class NodeSyncPlugin extends Plugin {
             },
             body: JSON.stringify(filesToPut),
           });
-          const user = window.localStorage.getItem("user");
+          const user = localStorage.getItem("user");
           if (!res.ok && user) {
-            refreshToken(this.settings.apiHost, user);
-          } else if (res.ok) {
+            const refreshSuccess = await refreshToken(
+              this.settings.apiHost,
+              user
+            );
+            if (refreshSuccess) {
+              res = await fetch(this.url, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(filesToPut),
+              });
+            }
+          }
+
+          if (res.ok) {
             const data = await res.json();
-            console.log("data from fetch: ", data);
+            new MessageModal(
+              this.app,
+              `Successfully sync'd ${this.app.vault.getName()} to ${
+                this.settings.apiHost
+              }!`
+            ).open();
+          } else {
+            return new MessageModal(
+              this.app,
+              "Session expired.\nPlease log in to the server."
+            ).open();
           }
         } catch (error) {
           console.error(error);
@@ -91,7 +115,7 @@ export default class NodeSyncPlugin extends Plugin {
         }
         try {
           console.log(`Fetching ${this.settings.vaultToFetch}...`);
-          const res = await fetch(
+          let res = await fetch(
             `${this.url}?vault=${this.settings.vaultToFetch}`,
             {
               credentials: "include",
@@ -99,18 +123,48 @@ export default class NodeSyncPlugin extends Plugin {
           );
           const user = window.localStorage.getItem("user");
           if (!res.ok && user) {
-            refreshToken(this.settings.apiHost, user);
-          } else if (res.ok) {
+            const refreshSuccess = await refreshToken(
+              this.settings.apiHost,
+              user
+            );
+            console.log("refreshSuccess", refreshSuccess);
+            if (refreshSuccess) {
+              // try to fetch the vault again if the refresh token was successful
+              res = await fetch(
+                `${this.url}?vault=${this.settings.vaultToFetch}`,
+                {
+                  credentials: "include",
+                }
+              );
+            }
+          }
+          if (res.ok) {
             const { name: vaultName, nodes } = await res.json();
-            Promise.all(
+            return Promise.all(
               nodes.map(async (node: Node) => {
                 // write the node back into the file
                 await writeNodeToFile(node, vaultName, this.app.vault);
               })
-            ).catch(console.error);
+            )
+              .then(() =>
+                new MessageModal(
+                  this.app,
+                  `Successfully retrieved ${this.settings.vaultToFetch}`
+                ).open()
+              )
+              .catch(console.error);
+          } else {
+            return new MessageModal(
+              this.app,
+              "Session expired.\nPlease log in to the server."
+            ).open();
           }
         } catch (error) {
           console.error(error);
+          return new MessageModal(
+            this.app,
+            "An error occurred. Check the console (ctrl+shift+i)"
+          ).open();
         }
       },
     });
@@ -126,7 +180,7 @@ export default class NodeSyncPlugin extends Plugin {
           this.settings.apiHost,
           "login"
         );
-        loginModal.open();
+        return loginModal.open();
       },
     });
 
@@ -141,7 +195,7 @@ export default class NodeSyncPlugin extends Plugin {
           this.settings.apiHost,
           "user"
         );
-        loginModal.open();
+        return loginModal.open();
       },
     });
 
@@ -150,18 +204,24 @@ export default class NodeSyncPlugin extends Plugin {
       id: "logout-user",
       name: "Logout User",
       callback: async () => {
-        const username = window.localStorage.getItem("user");
+        const username = localStorage.getItem("user");
+
         if (username) {
           const res = await fetch(`${this.settings.apiHost}/api/logout`, {
             method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
             body: JSON.stringify({ username }),
           });
           if (res.ok) {
             const data = await res.json();
-            console.log(data);
-            // TODO: delete cookie from the client side
+            localStorage.removeItem("user");
             new MessageModal(this.app, data.message).open();
           }
+        } else {
+          new MessageModal(this.app, "No user to logout").open();
         }
       },
     });

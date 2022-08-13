@@ -10,14 +10,13 @@ export const verifyAuthMiddleware = async (
   try {
     // get the cookie header
     const cookie = req.get("cookie");
-    console.log(cookie);
-    if (!cookie) res.status(401).json({ message: "Not Authorized" });
+    if (!cookie) return res.status(401).json({ message: "Not Authorized" });
     // grab the access token from the header
     const matches = /^access_token=(?<accessToken>.*);/g.exec(cookie as string);
     if (matches && matches.groups) {
       const accessToken = matches.groups.accessToken;
 
-      if (!accessToken) res.status(401).json({ message: "Not Authorized" });
+      if (!accessToken) return res.status(401).json({ message: "Not Authorized" });
 
       const user = jwt.verify(
         accessToken,
@@ -26,7 +25,7 @@ export const verifyAuthMiddleware = async (
       if (user) {
         req.user = user;
       } else {
-        res.status(401).json({ message: "Not Authorized" });
+        return res.status(401).json({ message: "Not Authorized" });
       }
       next();
     } else {
@@ -38,7 +37,7 @@ export const verifyAuthMiddleware = async (
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       error: error,
     });
   }

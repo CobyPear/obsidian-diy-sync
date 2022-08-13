@@ -32,7 +32,7 @@ model Node {
     content   String
     extension String
     name      String
-    path      String
+    path      String @unique
     ctime     String
     mtime     String
 }

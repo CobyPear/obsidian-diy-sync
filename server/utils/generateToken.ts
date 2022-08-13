@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 type TokenType = "access" | "refresh";
 
-export const generateToken = (
+export const generateToken = async (
   userId: number,
   username: string,
   expiresIn: string,
@@ -20,13 +20,13 @@ export const generateToken = (
 
   // if refresh token, save it to the DB in prisma.user.refreshToken
   if (type === "refresh") {
-    prisma.user.update({
+    await prisma.user.update({
       where: {
         id: userId,
       },
       data: {
         refreshToken: token,
-      }
+      },
     });
   }
 

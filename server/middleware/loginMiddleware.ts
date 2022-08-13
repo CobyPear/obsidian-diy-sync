@@ -9,12 +9,19 @@ export const loginMiddleware = async (
   next: NextFunction
 ) => {
   const { username, password: plaintextPw } = req.body;
-  console.log("uname,pwd", username, plaintextPw);
   const user = await prisma.user.findUnique({
     where: {
       username,
     },
   });
+
+  if (!user) {
+    return res
+      .status(401)
+      .json({
+        message: `Username ${username} was not found in the database\nIf you are sure the user exists, check the username and try again.`,
+      });
+  }
 
   const passwordsMatch =
     user && (await bcrypt.compare(plaintextPw, user.password));
@@ -27,22 +34,30 @@ export const loginMiddleware = async (
   }
 
   if (user && user.id) {
-    const accessToken = generateToken(user.id, user.username, "15m", "access");
-    const refreshToken = generateToken(user.id, user.username, "7d", "refresh");
+    const accessToken = await generateToken(
+      user.id,
+      user.username,
+      "15m",
+      "access"
+    );
+    const refreshToken = await generateToken(
+      user.id,
+      user.username,
+      "7d",
+      "refresh"
+    );
 
     res.cookie("access_token", accessToken, {
       maxAge: 15 * 60 * 1000, // 15 min
       sameSite: "none",
       secure: true,
       httpOnly: true,
-      path: "/admin",
     });
     res.cookie("refresh_token", refreshToken, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
       sameSite: "none",
       secure: true,
       httpOnly: true,
-      path: "/admin",
     });
 
     next();
