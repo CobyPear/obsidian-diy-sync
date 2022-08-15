@@ -44,6 +44,7 @@ export class LoginModal extends Modal {
           return new MessageModal(this.app, data.message).open();
         } else {
           this.setCurrentUser(data.username);
+          return new MessageModal(this.app, data.message).open();
         }
       })
       .catch(console.error);
