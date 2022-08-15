@@ -42,14 +42,15 @@ export class LoginModal extends Modal {
       .then(async (data) => {
         if (!data.username) {
           return new MessageModal(this.app, data.message).open();
+        } else {
+          this.setCurrentUser(data.username);
         }
-        this.setCurrentUser(data.username);
       })
       .catch(console.error);
   }
 
   setCurrentUser(username: string) {
-    window.localStorage.setItem("user", username);
+    localStorage.setItem("user", username);
   }
 
   onOpen() {

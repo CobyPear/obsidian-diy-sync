@@ -16,7 +16,7 @@ export const writeNodeToFile = async (
     );
   }
 
-  const vaultPath = path.resolve("", vault.getRoot().path);
+  const vaultPath = path.resolve(vault.getRoot().path);
   // If the file doesn't already exist, write it!
   const fileExists = await vault.adapter.exists(
     path.join(vaultPath, node.path)

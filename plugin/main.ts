@@ -121,7 +121,7 @@ export default class NodeSyncPlugin extends Plugin {
               credentials: "include",
             }
           );
-          const user = window.localStorage.getItem("user");
+          const user = localStorage.getItem("user");
           if (!res.ok && user) {
             const refreshSuccess = await refreshToken(
               this.settings.apiHost,
