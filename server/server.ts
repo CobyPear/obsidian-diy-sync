@@ -1,19 +1,23 @@
+import type { CorsOptions } from "cors";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import type { CorsOptions } from "cors";
 
 import { morganMiddleware } from "./utils/logger";
 import { routes } from "./routes";
+
 dotenv.config();
 export const app = express();
 const port = process.env.PORT || 8080;
 const host = process.env.HOST || "localhost";
 
 const corsOptions: CorsOptions = {
-  allowedHeaders: ["Origin", "Content-Type"],
+  allowedHeaders: ["Origin", "Content-Type", "Set-Cookie"],
   methods: "GET,OPTIONS,POST,PUT",
+  origin: process.env.ORIGIN || "app://obsidian.md",
+  credentials: true,
 };
+
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(morganMiddleware);

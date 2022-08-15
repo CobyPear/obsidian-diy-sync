@@ -1,7 +1,9 @@
-import { App, Plugin, PluginSettingTab, Setting, Modal } from "obsidian";
+import { App, Modal, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { NodeSyncPluginSettings, VaultToSync, Node } from "types";
 import { extractContent } from "./utils/extractContent";
 import { writeNodeToFile } from "utils/writeNodeToFile";
+import { LoginModal, MessageModal } from "components/modals";
+import { refreshToken } from "utils/refreshToken";
 
 const DEFAULT_SETTINGS: NodeSyncPluginSettings = {
   apiHost: "http://localhost:3001",
@@ -54,18 +56,46 @@ export default class NodeSyncPlugin extends Plugin {
         // add the name so we know which vault to update on the server
         filesToPut.vault = this.app.vault.getName();
 
-        console.log("filesToPut", filesToPut);
         try {
-          const res = await fetch(this.url, {
+          let res = await fetch(this.url, {
             method: "PUT",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(filesToPut),
           });
+          const user = localStorage.getItem("user");
+          if (!res.ok && user) {
+            const refreshSuccess = await refreshToken(
+              this.settings.apiHost,
+              user
+            );
+            if (refreshSuccess) {
+              res = await fetch(this.url, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(filesToPut),
+              });
+            }
+          }
+
           if (res.ok) {
             const data = await res.json();
-            console.log(data);
+            new MessageModal(
+              this.app,
+              `Successfully sync'd ${this.app.vault.getName()} to ${
+                this.settings.apiHost
+              }!`
+            ).open();
+          } else {
+            return new MessageModal(
+              this.app,
+              "Session expired.\nPlease log in to the server."
+            ).open();
           }
         } catch (error) {
           console.error(error);
@@ -85,31 +115,114 @@ export default class NodeSyncPlugin extends Plugin {
         }
         try {
           console.log(`Fetching ${this.settings.vaultToFetch}...`);
-          const res = await fetch(
-            `${this.url}?vault=${this.settings.vaultToFetch}`
+          let res = await fetch(
+            `${this.url}?vault=${this.settings.vaultToFetch}`,
+            {
+              credentials: "include",
+            }
           );
+          const user = localStorage.getItem("user");
+          if (!res.ok && user) {
+            const refreshSuccess = await refreshToken(
+              this.settings.apiHost,
+              user
+            );
+            console.log("refreshSuccess", refreshSuccess);
+            if (refreshSuccess) {
+              // try to fetch the vault again if the refresh token was successful
+              res = await fetch(
+                `${this.url}?vault=${this.settings.vaultToFetch}`,
+                {
+                  credentials: "include",
+                }
+              );
+            }
+          }
           if (res.ok) {
             const { name: vaultName, nodes } = await res.json();
-            Promise.all(
+            return Promise.all(
               nodes.map(async (node: Node) => {
                 // write the node back into the file
                 await writeNodeToFile(node, vaultName, this.app.vault);
               })
-            ).catch(console.error);
+            )
+              .then(() =>
+                new MessageModal(
+                  this.app,
+                  `Successfully retrieved ${this.settings.vaultToFetch}`
+                ).open()
+              )
+              .catch(console.error);
+          } else {
+            return new MessageModal(
+              this.app,
+              "Session expired.\nPlease log in to the server."
+            ).open();
           }
         } catch (error) {
           console.error(error);
+          return new MessageModal(
+            this.app,
+            "An error occurred. Check the console (ctrl+shift+i)"
+          ).open();
         }
       },
     });
 
-    // LOGIN COMMAND
-    // This adds a simple command that can be triggered anywhere
+    // LOGIN USER COMMAND
     this.addCommand({
-      id: "open-sample-modal-simple",
-      name: "Open sample modal (simple)",
-      callback: () => {
-        new LoginModal(this.app, this.settings.apiHost).open();
+      id: "open-login-modal",
+      name: "Login to Server",
+      callback: async () => {
+        const loginModal = new LoginModal(
+          this.app,
+          this,
+          this.settings.apiHost,
+          "login"
+        );
+        return loginModal.open();
+      },
+    });
+
+    // CREATE USER COMMAND
+    this.addCommand({
+      id: "open-create-user-modal",
+      name: "Create New User",
+      callback: async () => {
+        const loginModal = new LoginModal(
+          this.app,
+          this,
+          this.settings.apiHost,
+          "user"
+        );
+        return loginModal.open();
+      },
+    });
+
+    // LOGOUT USER DOMMAND
+    this.addCommand({
+      id: "logout-user",
+      name: "Logout User",
+      callback: async () => {
+        const username = localStorage.getItem("user");
+
+        if (username) {
+          const res = await fetch(`${this.settings.apiHost}/api/logout`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ username }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            localStorage.removeItem("user");
+            new MessageModal(this.app, data.message).open();
+          }
+        } else {
+          new MessageModal(this.app, "No user to logout").open();
+        }
       },
     });
 
@@ -188,76 +301,5 @@ class SampleSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
-  }
-}
-
-class LoginModal extends Modal {
-  username: string;
-  password: string;
-  url: string;
-  isWarningShown = false;
-
-  constructor(app: App, url: string) {
-    super(app);
-    this.url = url;
-  }
-
-  onSubmit(username: string, password: string) {
-    // POST to /api/login
-    // if 200 response, the token should be accessable in a cookie?
-    console.log(this.username, this.password);
-  }
-
-  onOpen() {
-    const { contentEl, containerEl } = this;
-    contentEl.addClass('login-modal')
-    contentEl.createEl("h1", { text: `Login to ${this.url}` });
-    // Username input control
-    new Setting(contentEl).setName("Username").addText((text) =>
-      text.onChange((value) => {
-        this.username = value;
-      })
-    );
-
-    // Password input control
-    new Setting(contentEl).setName("Password").addText((text) => {
-      text.inputEl.type = "password";
-      return text.onChange((value) => {
-        this.password = value;
-      });
-    });
-
-    // Login button
-    new Setting(contentEl).addButton((btn) =>
-      btn
-        .setButtonText("Login")
-        .setCta()
-        .onClick(() => {
-          console.log(this.isWarningShown);
-          // Show an error to the user that credentials are missing
-          if (!this.password || !this.username) {
-            if (!this.isWarningShown) {
-              const warning = contentEl.createEl("span", {
-                text: "Missing credentials. Please input username and password.",
-                cls: ["warning", "fade-in", "fade-out"]
-              });
-              this.isWarningShown = true;
-          
-              setTimeout(() => {
-                this.contentEl.removeChild(warning);
-                this.isWarningShown = false;
-              }, 5000);
-            }
-          } else {
-            this.close();
-            this.onSubmit(this.username, this.password);
-          }
-        })
-    );
-  }
-
-  onClose() {
-    const { contentEl } = this;
-    contentEl.empty();
   }
 }
