@@ -12,7 +12,7 @@ model User {
     username     String  @unique
     password     String
     Vaults       Vault[]
-    refreshToken String
+    refreshToken String?
 }
 
 model Vault {
@@ -27,8 +27,8 @@ model Vault {
 // A node is something in a vault
 model Node {
     id        Int    @id @default(autoincrement())
-    Vault     Vault? @relation(fields: [vaultId], references: [id])
-    vaultId   Int?
+    Vault     Vault  @relation(fields: [vaultId], references: [id])
+    vaultId   Int
     content   String
     extension String
     name      String

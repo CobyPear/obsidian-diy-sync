@@ -1,5 +1,6 @@
-import { prisma } from "../db";
 import type { Request, Response } from "express";
+import type { Vault } from "@prisma/client";
+import { prisma } from "../db";
 import { createOrUpdateNodes } from "../utils/createOrUpdateNodes";
 
 export const vaultControllers = {
@@ -44,8 +45,11 @@ export const vaultControllers = {
           },
         });
 
+        let vaultId: Vault["id"];
+
         if (foundVault) {
           console.log(`Found vault ${vault} Adding nodes...`);
+          vaultId = foundVault.id;
           resultVault = await createOrUpdateNodes({
             nodes,
             vaultId: foundVault.id,
@@ -57,12 +61,17 @@ export const vaultControllers = {
               userId: req.user.userId,
             },
           });
-          resultVault = await createOrUpdateNodes({
-            nodes,
-            vaultId: newVault.id,
-          });
+          vaultId = newVault.id;
         }
-        res.json({ message: "success", vault: resultVault });
+        resultVault = await createOrUpdateNodes({
+          nodes,
+          vaultId: vaultId,
+        });
+        ``;
+        res.json({
+          message: `Vault ${vault} was successfuly sync'd!`,
+          vault: resultVault,
+        });
       } else {
         res.status(400).json({ error: "No vault was received" });
       }
