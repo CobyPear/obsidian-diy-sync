@@ -19,7 +19,7 @@ This is a monorepo made with pnpm workspaces. Currently not many of the nice mon
    or in my case,
    `ln -s ~/projects/obsidian-diy-sync/plugin ~/Documents/TestingVault/.obsidian/plugins/obsidian-nodejs-sync-plugin`
 
-1. add a .env file with the following variables
+1. add a `.env` file to `./server` with the following variables
 
    ```
    JWT_REFRESH_SECRET=some secret here!
@@ -29,7 +29,7 @@ This is a monorepo made with pnpm workspaces. Currently not many of the nice mon
 1. Now in the monorepo, you can start the plugin in watch mode with `pnpm dev:plugin`
 1. Start the server in dev mode `pnpm dev:server`
 
-You will need to reload the plugin in Obsidian to see the changes, but the code should be watching for changes in both the server and plugin.
+You will need to reload the plugin in Obsidian to see the changes in the plugin, but the code should be watching for changes in both the server and plugin.
 Now you can develop in both apps at once!
 
 ## Plugin
@@ -45,7 +45,11 @@ The server is needed to talk to the database (in this case, sqlite). The server 
 
 ## Auth
 
-Auth is achieved through username and password (NOTE: there is no validation on either right now, password can by anything) exchanged for a refresh token and access token. Both tokens are set to httpOnly cookies for 7 days and 15 minutes respectively. Once the access token expires, if the refresh token has not expired and it matches the refresh token in the DB, it will be exchanged for a new refresh and access token.
+Auth is achieved through username and password exchanged for tokens. There is no password length or complexity requirement. 
+
+Please use a secure password. Also do not share your backend URL, unless you want to share a backend; multiple users and vaults are supported, however at this time you cannot share vaults between users (Open to supporting this).
+
+A successful creation of a user or singup will return a refresh token and access token. Both tokens are set to httpOnly cookies for 7 days and 15 minutes respectively. Once the access token expires, if the refresh token has not expired and it matches the refresh token in the DB, it will be exchanged for a new refresh and access token.
 
 
 Currently on the plugin side, the username is being stored in localstorage which is sent with the POST request on the refresh_token route. I'm not sure if this is the best approach and I'm open to suggestions for auth in general. Is this the best approach?
@@ -58,3 +62,4 @@ I would like to implement a OTP feature which takes in an email or phone number 
 - Sync on save
 - Add routes to the server to be able to grab single nodes, or nodes by tag
 - Add `/blogs` route to the server that serves nodes with a #published tag and/or `published: true` fontmattter.
+- "magic link" or OTP login
