@@ -11,7 +11,7 @@
   },
   "keywords": [],
   "author": "CobyPear",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
