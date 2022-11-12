@@ -12,7 +12,7 @@ export const verifyAuthMiddleware = async (
     const cookie = req.get("cookie");
     if (!cookie) return res.status(401).json({ message: "Not Authorized" });
     // grab the access token from the header
-    const matches = /^access_token=(?<accessToken>.*);/g.exec(cookie as string);
+    const matches = /^access_token=(?<accessToken>[\w\D]+);/g.exec(cookie as string);
     if (matches && matches.groups) {
       const accessToken = matches.groups.accessToken;
 
