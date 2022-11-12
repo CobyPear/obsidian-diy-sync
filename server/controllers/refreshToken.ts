@@ -7,7 +7,7 @@ export const refreshControllers = {
   post: async (req: Request, res: Response) => {
     // TODO: Make this composable :eyes:
     const cookie = req.get("cookie");
-    const matches = /refresh_token=(?<refreshToken>.*);?/g.exec(
+    const matches = /refresh_token=(?<refreshToken>[\w\D]+);?/g.exec(
       cookie as string
     );
     if (matches && matches.groups) {
