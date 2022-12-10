@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { prisma } from "../db";
 
-export const logoutControlers = {
+export const logoutControllers = {
   post: async (req: Request, res: Response) => {
     const { username } = req.body;
     console.log(`logging out ${username}...`);
