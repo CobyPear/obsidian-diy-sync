@@ -2,11 +2,7 @@ import path from "path";
 import fs from "fs";
 import { v4 as uuid } from "uuid";
 import type { Environment, EnvironmentOptions } from "vitest";
-
 import { execSync } from "child_process";
-// fix for 'How to fix "__dirname is not defined in ES module scope"'
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
 
 type ObsyncOptions = EnvironmentOptions & {
   schemaPath?: string;
