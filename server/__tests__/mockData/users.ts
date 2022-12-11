@@ -9,4 +9,8 @@ export const users: Prisma.UserCreateInput[] = [
     username: "teapot42069",
     password: "notverysecure",
   },
+  {
+    username: "the_best_dog",
+    password: "itsa[]Dassword12#$%",
+  },
 ];

@@ -7,7 +7,7 @@ import { morganMiddleware } from "./utils/logger";
 import { routes } from "./routes";
 
 dotenv.config();
-export const app = express();
+const app = express();
 const port = process.env.PORT || 8080;
 const host = process.env.HOST || "localhost";
 
@@ -30,3 +30,5 @@ app.use("*", (req, res) => {
 app.listen(port, () => {
   console.log(`🌎 Server listening at http://${host}:${port}`);
 });
+
+export default app;

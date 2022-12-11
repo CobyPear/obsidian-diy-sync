@@ -1,7 +1,8 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-import { users } from "./mockData/users";
-import { vaults } from "./mockData/vaults";
-import { nodes1, nodes2 } from "./mockData/node";
+import { PrismaClient } from "@prisma/client";
+import request from "supertest";
+import app from "../server";
+
+export const server = request.agent(app);
 
 export const prisma = new PrismaClient({
   datasources: {
@@ -15,7 +16,7 @@ process.env.JWT_ACCESS_SECRET = "test_Access";
 
 afterAll(async () => {
   await prisma.node.deleteMany();
-  await prisma.vault.deleteMany()
+  await prisma.vault.deleteMany();
   await prisma.user.deleteMany();
   await prisma.$disconnect();
 });

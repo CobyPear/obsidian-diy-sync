@@ -4,7 +4,6 @@ import { prisma } from "../db";
 export const logoutControllers = {
   post: async (req: Request, res: Response) => {
     const { username } = req.body;
-    console.log(`logging out ${username}...`);
     try {
       await prisma.user.update({
         where: {
@@ -15,11 +14,13 @@ export const logoutControllers = {
         },
       });
     } catch (error) {
-      return res.status(500).json({
+      return res.status(404).json({
         message: `Could not find ${username} in database.`,
         prismaError: error,
       });
     }
+
+    console.log(`logging out ${username}...`);
 
     res.clearCookie("access_token", {
       sameSite: "none",
