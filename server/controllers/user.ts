@@ -58,7 +58,7 @@ export const userControllers = {
       }
     } catch (error) {
       if ((error as PrismaClientKnownRequestError).code) {
-        res.status(500).json({
+        res.status(400).json({
           message: "Could not create user. Is the username already in use?",
           prismaError: error,
         });

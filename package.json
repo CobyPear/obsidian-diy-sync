@@ -9,7 +9,8 @@
     "build:configs": "pnpm -F './configs/**' build",
     "build:server": "pnpm -F './server' build:prod",
     "start:server": "pnpm -F './server' start:prod",
-    "test:server": "pnpm -F './server' test"
+    "test:server": "pnpm -F './server' test",
+    "server:test:watch": "pnpm -F './server' test:watch"
   },
   "keywords": [],
   "author": "CobyPear",
