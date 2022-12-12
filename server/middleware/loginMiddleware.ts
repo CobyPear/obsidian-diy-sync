@@ -48,13 +48,13 @@ export const loginMiddleware = async (
     res.cookie("access_token", accessToken, {
       maxAge: 15 * 60 * 1000, // 15 min
       sameSite: "none",
-      secure: process.env.NODE_ENV === "production" ? true : false,
+      secure: process.env.TEST_ENV === "true" ? false : true,
       httpOnly: true,
     });
     res.cookie("refresh_token", refreshToken, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
       sameSite: "none",
-      secure: process.env.NODE_ENV === "production" ? true : false,
+      secure: process.env.TEST_ENV === "true" ? false : true,
       httpOnly: true,
     });
 

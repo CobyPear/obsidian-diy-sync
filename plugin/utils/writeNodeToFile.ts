@@ -17,11 +17,16 @@ export const writeNodeToFile = async (
   }
 
   const vaultPath = path.resolve(vault.getRoot().path);
+  const nodePath = path.resolve(vaultPath, node.path);
   // If the file doesn't already exist, write it!
-  const fileExists = await vault.adapter.exists(
-    path.join(vaultPath, node.path)
-  );
+  const fileExists = await vault.adapter.exists(nodePath);
+
   if (!fileExists) {
+    const dirs = nodePath
+      .split("/")
+      .filter((dir) => !dir.endsWith(".md") && dir !== "");
+
+    dirs.length && (await vault.adapter.mkdir(path.join(vaultPath, ...dirs)));
     try {
       const file = await vault.create(path.join(vaultPath, node.path), "", {
         ctime: Number(node.ctime),
