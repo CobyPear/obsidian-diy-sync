@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "CommonJS",
+    "module": "esnext",
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
@@ -10,7 +10,5 @@
     "alwaysStrict": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "outDir": "build",
-  },
-  "exclude": ["__tests__"]
+  }
 }

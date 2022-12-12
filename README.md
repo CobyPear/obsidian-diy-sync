@@ -74,5 +74,5 @@ I would like to implement a OTP feature which takes in an email or phone number 
 - Sync on save
 - Add routes to the server to be able to grab single nodes, or nodes by tag
 - Add `/blogs` route to the server that serves nodes with a #published tag and/or `published: true` fontmattter.
+- Sync on save option
 - "magic link" or OTP login
-

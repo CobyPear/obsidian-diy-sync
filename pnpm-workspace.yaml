@@ -1,2 +1,3 @@
 plugin: plugin/**
 server: server
+configs: configs/**
