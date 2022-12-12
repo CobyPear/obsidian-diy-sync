@@ -66,7 +66,6 @@ export default class NodeSyncPlugin extends Plugin {
             body: JSON.stringify(filesToPut),
           });
           const user = localStorage.getItem("user");
-          console.log(res);
           if (!res.ok && user) {
             const refreshSuccess = await refreshToken(
               this.settings.apiHost,
