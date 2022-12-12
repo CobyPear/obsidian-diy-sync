@@ -26,28 +26,29 @@ export class LoginModal extends Modal {
     this.modalType = modalType;
   }
 
-  onSubmit(username: string, password: string) {
-    // POST to /api/login
-    // if 200 response, the token should be accessable in a cookie?
-    // otherwise, open a new modal with the error
-    fetch(`${this.url}/api/${this.modalType}`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    })
-      .then((res) => res.json())
-      .then(async (data) => {
-        if (!data.username) {
-          return new MessageModal(this.app, data.message).open();
-        } else {
-          this.setCurrentUser(data.username);
-          return new MessageModal(this.app, data.message).open();
-        }
-      })
-      .catch(console.error);
+  async onSubmit(username: string, password: string) {
+    try {
+      // POST to /api/login
+      // if 200 response, the token should be accessible in a cookie?
+      // otherwise, open a new modal with the error
+      const res = await fetch(`${this.url}/api/${this.modalType}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (!data.username) {
+        return new MessageModal(this.app, data.message).open();
+      } else {
+        this.setCurrentUser(data.username);
+        return new MessageModal(this.app, data.message).open();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   setCurrentUser(username: string) {

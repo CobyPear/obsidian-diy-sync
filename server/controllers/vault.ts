@@ -8,14 +8,16 @@ export const vaultControllers = {
     const vault = req.query.vault as string;
     const errorMessage = `No vault ${vault} to send. Check the vault name and make sure you've sync'd at least once.`;
     try {
-      console.log('vault', vault)
       if (!vault) {
-        return res.status(400).json({ error: 'No vault was sent in the request. Make sure the Vault is set in the plugin options' });
+        return res.status(400).json({
+          error:
+            "No vault was sent in the request. Make sure the Vault is set in the plugin options",
+        });
       }
       // get vault from DB
       // send it!
       const vaultsFromDB = await prisma.vault.findFirst({
-        where: { name: vault },
+        where: { name: vault, userId: req.user.userId },
         include: { nodes: true },
       });
       if (!vaultsFromDB) {
@@ -25,7 +27,7 @@ export const vaultControllers = {
       }
       return res.json(vaultsFromDB);
     } catch (error) {
-      console.error(error)
+      console.error(error);
       return res.status(500).json({
         error: errorMessage,
       });

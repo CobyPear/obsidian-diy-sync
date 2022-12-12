@@ -1,4 +1,4 @@
-import { App, Modal, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { NodeSyncPluginSettings, VaultToSync, Node } from "types";
 import { extractContent } from "./utils/extractContent";
 import { writeNodeToFile } from "utils/writeNodeToFile";
@@ -122,7 +122,7 @@ export default class NodeSyncPlugin extends Plugin {
             }
           );
           const user = localStorage.getItem("user");
-          if (!res.ok && user) {
+          if (!res.ok && user && res.status === 401) {
             const refreshSuccess = await refreshToken(
               this.settings.apiHost,
               user
@@ -140,24 +140,26 @@ export default class NodeSyncPlugin extends Plugin {
           }
           if (res.ok) {
             const { name: vaultName, nodes } = await res.json();
-            return Promise.all(
-              nodes.map(async (node: Node) => {
-                // write the node back into the file
-                await writeNodeToFile(node, vaultName, this.app.vault);
-              })
-            )
-              .then(() =>
-                new MessageModal(
-                  this.app,
-                  `Successfully retrieved ${this.settings.vaultToFetch}`
-                ).open()
-              )
-              .catch(console.error);
+            try {
+              await Promise.all(
+                nodes.map(async (node: Node) => {
+                  // write the node back into the file
+                  await writeNodeToFile(node, vaultName, this.app.vault);
+                })
+              );
+              new MessageModal(
+                this.app,
+                `Successfully retrieved ${this.settings.vaultToFetch}`
+              ).open();
+            } catch (error) {
+              console.error(error);
+            }
           } else {
-            return new MessageModal(
-              this.app,
-              "Session expired.\nPlease log in to the server."
-            ).open();
+            const message =
+              res.status === 404
+                ? "Vault not found for this user\n Please log in with the correct user"
+                : "Session expired\n Please log in to the server.";
+            return new MessageModal(this.app, message).open();
           }
         } catch (error) {
           console.error(error);
@@ -199,7 +201,7 @@ export default class NodeSyncPlugin extends Plugin {
       },
     });
 
-    // LOGOUT USER DOMMAND
+    // LOGOUT USER COMMAND
     this.addCommand({
       id: "logout-user",
       name: "Logout User",
@@ -227,7 +229,7 @@ export default class NodeSyncPlugin extends Plugin {
     });
 
     // This adds a settings tab so the user can configure various aspects of the plugin
-    this.addSettingTab(new SampleSettingTab(this.app, this));
+    this.addSettingTab(new NodeSyncSettingTab(this.app, this));
   }
 
   onunload() {}
@@ -241,7 +243,7 @@ export default class NodeSyncPlugin extends Plugin {
   }
 }
 
-class SampleSettingTab extends PluginSettingTab {
+class NodeSyncSettingTab extends PluginSettingTab {
   plugin: NodeSyncPlugin;
 
   constructor(app: App, plugin: NodeSyncPlugin) {

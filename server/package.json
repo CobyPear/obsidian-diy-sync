@@ -4,7 +4,7 @@
   "description": "",
   "main": "./build/server.js",
   "scripts": {
-    "build:prod": "pnpm prisma generate schema=./server/db/schema.prod.prisma && tsc",
+    "build:prod": "pnpm prisma generate --schema=./server/db/schema.prod.prisma && tsc",
     "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
     "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
     "start:prod": "NODE_ENV=production node ./build/server.js",

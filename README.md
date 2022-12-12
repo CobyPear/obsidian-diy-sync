@@ -58,21 +58,21 @@ Click the button below to get started!
 
 ## Auth
 
-Auth is achieved through username and password exchanged for tokens. There is no password length or complexity requirement. 
+Auth is achieved through username and password exchanged for tokens. There is no password length or complexity requirement.
 
 Please use a secure password. Also do not share your backend URL, unless you want to share a backend; multiple users and vaults are supported, however at this time you cannot share vaults between users (Open to supporting this).
 
-A successful creation of a user or singup will return a refresh token and access token. Both tokens are set to httpOnly cookies for 7 days and 15 minutes respectively. Once the access token expires, if the refresh token has not expired and it matches the refresh token in the DB, it will be exchanged for a new refresh and access token.
+A successful creation of a user or signup will return a refresh token and access token. Both tokens are set to httpOnly cookies for 7 days and 15 minutes respectively. Once the access token expires, if the refresh token has not expired and it matches the refresh token in the DB, it will be exchanged for a new refresh and access token.
 
 Currently on the plugin side, the username is being stored in localstorage which is sent with the POST request on the refresh_token route. I'm not sure if this is the best approach and I'm open to suggestions for auth in general. Is this the best approach?
 
 I would like to implement a OTP feature which takes in an email or phone number and sends a password. This password would be exchanged for the refresh and access tokens. I think this would be nice because the DB wouldn't have to hold a username and password necessarily
-
 
 ## Future Development
 
 - Sync on save
 - Add routes to the server to be able to grab single nodes, or nodes by tag
 - Add `/blogs` route to the server that serves nodes with a #published tag and/or `published: true` fontmattter.
-- Sync on save option
 - "magic link" or OTP login
+- Media storage
+- Add support for other DBs

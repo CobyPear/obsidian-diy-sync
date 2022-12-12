@@ -11,6 +11,7 @@ export const prisma = new PrismaClient({
     },
   },
 });
+process.env.TEST_ENV = "true";
 process.env.JWT_REFRESH_SECRET = "test_Refresh";
 process.env.JWT_ACCESS_SECRET = "test_Access";
 
