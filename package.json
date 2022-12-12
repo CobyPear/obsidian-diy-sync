@@ -6,12 +6,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:server": "pnpm -F './server' dev",
     "dev:plugin": "pnpm -F './plugin' dev",
+    "build:configs": "pnpm -F './configs/**' build",
     "build:server": "pnpm -F './server' build:prod",
-    "start:server": "pnpm -F './server' start:prod"
+    "start:server": "pnpm -F './server' start:prod",
+    "test:server": "pnpm -F './server' test",
+    "server:test:watch": "pnpm -F './server' test:watch"
   },
   "keywords": [],
   "author": "CobyPear",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
@@ -20,5 +23,10 @@
   },
   "dependencies": {
     "prisma": "^4.1.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "vitest-environment-obsync": "workspace:*"
+    }
   }
 }

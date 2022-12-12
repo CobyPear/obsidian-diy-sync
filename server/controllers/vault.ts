@@ -8,20 +8,25 @@ export const vaultControllers = {
     const vault = req.query.vault as string;
     const errorMessage = `No vault ${vault} to send. Check the vault name and make sure you've sync'd at least once.`;
     try {
+      console.log('vault', vault)
+      if (!vault) {
+        return res.status(400).json({ error: 'No vault was sent in the request. Make sure the Vault is set in the plugin options' });
+      }
       // get vault from DB
       // send it!
-      const [vaultsFromDB] = await prisma.vault.findMany({
+      const vaultsFromDB = await prisma.vault.findFirst({
         where: { name: vault },
         include: { nodes: true },
       });
       if (!vaultsFromDB) {
-        res.status(404).json({
+        return res.status(404).json({
           error: errorMessage,
         });
       }
-      res.json(vaultsFromDB);
+      return res.json(vaultsFromDB);
     } catch (error) {
-      res.status(404).json({
+      console.error(error)
+      return res.status(500).json({
         error: errorMessage,
       });
     }
@@ -69,7 +74,7 @@ export const vaultControllers = {
         });
         ``;
         res.json({
-          message: `Vault ${vault} was successfuly sync'd!`,
+          message: `Vault ${vault} was successfully sync'd!`,
           vault: resultVault,
         });
       } else {

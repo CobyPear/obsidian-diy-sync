@@ -38,16 +38,15 @@ export const userControllers = {
         res.cookie("access_token", accessToken, {
           maxAge: 15 * 60 * 1000, // 15 min
           sameSite: "none",
-          secure: true,
+          secure: process.env.NODE_ENV === "production" ? true : false,
           httpOnly: true,
         });
         res.cookie("refresh_token", refreshToken, {
           maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
           sameSite: "none",
-          secure: true,
+          secure: process.env.NODE_ENV === "production" ? true : false,
           httpOnly: true,
         });
-
         // send response to user
         res.json({
           message: "User created!",
@@ -58,7 +57,7 @@ export const userControllers = {
       }
     } catch (error) {
       if ((error as PrismaClientKnownRequestError).code) {
-        res.status(500).json({
+        res.status(400).json({
           message: "Could not create user. Is the username already in use?",
           prismaError: error,
         });

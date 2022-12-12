@@ -13,6 +13,7 @@ services:
         - server/db/*.db
         - server/db/migrations/**
         - plugin/**
+        - configs/**
     disk:
       name: data
       mountPath: /data

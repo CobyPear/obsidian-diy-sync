@@ -1,12 +1,19 @@
 # Obsidian.md DIY Sync Server+Plugin
 
-## Prerequisites/technologies used
+## Prerequisites
 
-This is a monorepo made with pnpm workspaces. Currently not many of the nice monorepo features are being used, but if I ever go to publish this I will fix that.
+This is a monorepo made with pnpm workspaces.
 
 - pnpm
-- nodejs
-- express
+- node
+- npm
+
+### Technologies Used
+
+- TypeScript
+- Express
+- Prisma
+- sqlite - this is the default. You may use any DB supported by Prisma
 - obsidian-sample-plugin (used for the plugin template)
 
 ## To get started for local development:
@@ -34,14 +41,20 @@ Now you can develop in both apps at once!
 
 ## Plugin
 
-The plugin gives Obsidian a palette command that will sync your vault to the supplied endpoint. You will need to deploy the server somewhere, or you can run it locally.
+The plugin gives Obsidian a palette command that will sync your vault to the supplied endpoint. You will need to deploy the server somewhere (see the Deploy to Render button), or you can run it locally.
 
-The plugin sends a POST request to the supplied apiHost+apiEndpoint containing your whole vault. // TODO: only send files that changed since last sync
+The plugin sends a POST request to the supplied apiHost+apiEndpoint containing your whole vault.
 The plugin also has can GET a vault, so you can sync to another vault.
 
 ## Server
 
 The server is needed to talk to the database (in this case, sqlite). The server receives a PUT or GET request from the plugin and stores or retrieves the appropriate data.
+
+I have made the server to be deployable to [render.com](https://render.com) which is able to mount a file for use as the sqlite database.
+
+Click the button below to get started!
+
+![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 
 ## Auth
 
@@ -51,15 +64,15 @@ Please use a secure password. Also do not share your backend URL, unless you wan
 
 A successful creation of a user or singup will return a refresh token and access token. Both tokens are set to httpOnly cookies for 7 days and 15 minutes respectively. Once the access token expires, if the refresh token has not expired and it matches the refresh token in the DB, it will be exchanged for a new refresh and access token.
 
-
 Currently on the plugin side, the username is being stored in localstorage which is sent with the POST request on the refresh_token route. I'm not sure if this is the best approach and I'm open to suggestions for auth in general. Is this the best approach?
 
-
 I would like to implement a OTP feature which takes in an email or phone number and sends a password. This password would be exchanged for the refresh and access tokens. I think this would be nice because the DB wouldn't have to hold a username and password necessarily
+
 
 ## Future Development
 
 - Sync on save
 - Add routes to the server to be able to grab single nodes, or nodes by tag
 - Add `/blogs` route to the server that serves nodes with a #published tag and/or `published: true` fontmattter.
+- Sync on save option
 - "magic link" or OTP login
