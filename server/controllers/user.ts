@@ -82,7 +82,6 @@ export const userControllers = {
           username,
         },
       });
-      console.log("deleted", deleted);
       if (deleted) {
         clearCookies(res);
         delete req.user;

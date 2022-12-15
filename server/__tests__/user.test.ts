@@ -17,12 +17,12 @@ describe("/api/user", () => {
 
     expect(access_token).toBeDefined();
     expect(refresh_token).toBeDefined();
-    expect(response.body.user.username).toEqual(users[0].username);
+    expect(response.body.username).toEqual(users[0].username);
     expect(response.body.message).toEqual("User created!");
 
     expect(
       await prisma.user.findUnique({
-        where: { username: response.body.user.username },
+        where: { username: response.body.username },
       })
     ).toBeDefined();
   });
@@ -48,13 +48,33 @@ describe("/api/user", () => {
 
     expect(access_token).toBeDefined();
     expect(refresh_token).toBeDefined();
-    expect(response.body.user.username).toEqual(users[1].username);
+    expect(response.body.username).toEqual(users[1].username);
     expect(response.body.message).toEqual("User created!");
     expect(
       await prisma.user.findUnique({
-        where: { username: response.body.user.username },
+        where: { username: response.body.username },
       })
     ).toBeDefined();
+  });
+
+  it("should delete the current user", async () => {
+    const response = await server
+      .delete("/api/user")
+      .send({ username: users[1].username })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200);
+
+    const [access_token, refresh_token] = response.headers["set-cookie"];
+
+    expect(access_token).toBeDefined();
+    expect(refresh_token).toBeDefined();
+    expect(response.body.message).toEqual(`${users[1].username} and associated vault(s) deleted successfully`);
+    expect(
+      await prisma.user.findUnique({
+        where: { username: users[1].username },
+      })
+    ).toBeNull();
   });
 });
 
@@ -101,7 +121,7 @@ describe("/api/vault", async () => {
   });
 
   it("should get a vault", async () => {
-    const response = await server
+    await server
       .get(`/api/vault?vault=${vaults[0].name}`)
       .send({
         nodes: nodes1,
@@ -142,11 +162,11 @@ describe("/api/refresh_token", () => {
   it("should refresh tokens when a user is logged in", async () => {
     await server
       .post("/api/login")
-      .send({ ...users[1] })
+      .send({ ...users[0] })
       .expect(200);
     const response = await server
       .post("/api/refresh_token")
-      .send({ username: users[1].username })
+      .send({ username: users[0].username })
       .expect(200);
 
     expect(response.body.message).toEqual("Tokens Refreshed");
@@ -155,7 +175,7 @@ describe("/api/refresh_token", () => {
   it("should send a 401 if the session is expired", async () => {
     await prisma.user.update({
       where: {
-        username: users[1].username,
+        username: users[0].username,
       },
       data: {
         refreshToken: null,
@@ -163,7 +183,7 @@ describe("/api/refresh_token", () => {
     });
     const response = await server
       .post("/api/refresh_token")
-      .send({ username: users[1].username })
+      .send({ username: users[0].username })
       .expect(401);
 
     expect(response.body.message).toEqual(
