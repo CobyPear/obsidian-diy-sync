@@ -4,6 +4,7 @@ import { extractContent } from "./utils/extractContent";
 import { writeNodeToFile } from "utils/writeNodeToFile";
 import { LoginModal, MessageModal } from "components/modals";
 import { refreshToken } from "utils/refreshToken";
+import { deleteUser } from "commands/deleteUser";
 
 const DEFAULT_SETTINGS: NodeSyncPluginSettings = {
   apiHost: "http://localhost:3001",
@@ -226,6 +227,13 @@ export default class NodeSyncPlugin extends Plugin {
           new MessageModal(this.app, "No user to logout").open();
         }
       },
+    });
+
+    // DELETE USER COMMAND
+    this.addCommand({
+      id: "delete-user",
+      name: "Delete current User",
+      callback: () => deleteUser(this.settings, this.app)
     });
 
     // This adds a settings tab so the user can configure various aspects of the plugin

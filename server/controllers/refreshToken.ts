@@ -68,7 +68,7 @@ export const refreshControllers = {
         }
       } catch (error) {
         console.log(error);
-        return res.status(500);
+        return res.status(500).json();
       }
     }
   },

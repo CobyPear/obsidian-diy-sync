@@ -8,7 +8,7 @@ generator client {
 }
 
 model User {
-    id           Int     @id @default(autoincrement())
+    id           String  @id @default(uuid())
     username     String  @unique
     password     String
     Vaults       Vault[]
@@ -16,19 +16,19 @@ model User {
 }
 
 model Vault {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     name      String
     nodes     Node[]
-    User      User?    @relation(fields: [userId], references: [id])
-    userId    Int?
+    User      User     @relation(fields: [user], references: [username], onDelete: Cascade)
+    user      String   @unique
 }
 
 // A node is something in a vault
 model Node {
-    id        Int    @id @default(autoincrement())
-    Vault     Vault  @relation(fields: [vaultId], references: [id])
-    vaultId   Int
+    id        String @id @default(uuid())
+    Vault     Vault  @relation(fields: [vaultId], references: [id], onDelete: Cascade)
+    vaultId   String
     content   String
     extension String
     name      String

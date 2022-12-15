@@ -7,17 +7,20 @@ export const vaultControllers = {
   get: async (req: Request, res: Response) => {
     const vault = req.query.vault as string;
     const errorMessage = `No vault ${vault} to send. Check the vault name and make sure you've sync'd at least once.`;
+    if (!vault) {
+      return res.status(400).json({
+        error:
+          "No vault was sent in the request. Make sure the Vault is set in the plugin options",
+      });
+    }
+    if (!req.user) {
+      return res.status(401).json({ message: "Please login" });
+    }
     try {
-      if (!vault) {
-        return res.status(400).json({
-          error:
-            "No vault was sent in the request. Make sure the Vault is set in the plugin options",
-        });
-      }
       // get vault from DB
       // send it!
       const vaultsFromDB = await prisma.vault.findFirst({
-        where: { name: vault, userId: req.user.userId },
+        where: { name: vault, user: req.user.username },
         include: { nodes: true },
       });
       if (!vaultsFromDB) {
@@ -39,13 +42,16 @@ export const vaultControllers = {
         body: { nodes, vault },
       } = req;
       let resultVault;
-      if (!req.user) {
-        res.status(401);
+      if (!vault) {
+        res.status(400).json({ error: "No vault was received" });
       }
-      if (nodes && vault) {
-        const [foundVault] = await prisma.vault.findMany({
+      if (!req.user) {
+        res.status(401).json({ message: "Please login" });
+      } else if (nodes && vault) {
+        const foundVault = await prisma.vault.findFirst({
           where: {
             name: vault,
+            user: req.user.username,
           },
           include: {
             nodes: true,
@@ -65,7 +71,7 @@ export const vaultControllers = {
           const newVault = await prisma.vault.create({
             data: {
               name: vault,
-              userId: req.user.userId,
+              user: req.user.username,
             },
           });
           vaultId = newVault.id;
@@ -74,16 +80,14 @@ export const vaultControllers = {
           nodes,
           vaultId: vaultId,
         });
-        ``;
         res.json({
           message: `Vault ${vault} was successfully sync'd!`,
           vault: resultVault,
         });
-      } else {
-        res.status(400).json({ error: "No vault was received" });
       }
     } catch (error) {
-      res.status(500).json({
+      console.error(error);
+      return res.status(500).json({
         message: "Something went wrong",
         error: error,
       });
