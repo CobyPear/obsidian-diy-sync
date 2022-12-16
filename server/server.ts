@@ -5,6 +5,7 @@ import cors from "cors";
 
 import { morganMiddleware } from "./utils/logger";
 import { routes } from "./routes";
+import { blogControllers } from "./controllers/blog";
 
 dotenv.config();
 const app = express();
@@ -14,11 +15,13 @@ const host = process.env.HOST || "localhost";
 const corsOptions: CorsOptions = {
   allowedHeaders: ["Origin", "Content-Type", "Set-Cookie"],
   methods: "GET,OPTIONS,POST,PUT,DELETE",
-  origin: process.env.ORIGIN || "app://obsidian.md",
+  origin: "app://obsidian.md",
   credentials: true,
 };
 
 app.use(express.json());
+// ignore cors for blog route for now
+app.get("/api/blog", blogControllers.get);
 app.use(cors(corsOptions));
 app.use(morganMiddleware);
 

@@ -227,7 +227,23 @@ describe("/api/logout", () => {
         .get(`/api/blog?vault=${vaults[0].name}`)
         .expect(200);
 
-      expect(response.body).toEqual({});
+      expect(response.body).toEqual([
+        {
+          name: "another test note.md",
+          content:
+            "---\n" +
+            "font: matter\n" +
+            "teset: value\n" +
+            "---\n" +
+            "#tag1 #tag2 #published\n" +
+            "\n" +
+            "# My test note 2\n" +
+            "Here is a paragraph with some text blah blah blah.\n" +
+            "\n" +
+            "Linebreak!\n" +
+            "\n",
+        },
+      ]);
     });
   });
 });
