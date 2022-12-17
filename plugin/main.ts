@@ -233,7 +233,7 @@ export default class NodeSyncPlugin extends Plugin {
     this.addCommand({
       id: "delete-user",
       name: "Delete current User",
-      callback: () => deleteUser(this.settings, this.app)
+      callback: () => deleteUser(this.settings, this.app),
     });
 
     // This adds a settings tab so the user can configure various aspects of the plugin

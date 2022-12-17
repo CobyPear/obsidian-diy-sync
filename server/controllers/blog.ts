@@ -34,7 +34,16 @@ export const blogControllers = {
             content.includes("#published")
           );
         })
-        .map(({ name, content }) => ({ name, content }));
+        .map(({ name, content }) => {
+          const title = name.replace(/\.md$/g, "");
+          const slug = title.replace(/\s/g, "-").toLowerCase();
+          content = content.replace("#published", "");
+          return {
+            title,
+            slug,
+            content,
+          };
+        });
 
       if (!publishedNodes) {
         return res.status(404).json({
