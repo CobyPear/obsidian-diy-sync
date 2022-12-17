@@ -11,9 +11,9 @@ importers:
       '@typescript-eslint/parser': ^5.32.0
       eslint: ^8.20.0
       prettier: ^2.7.1
-      prisma: ^4.1.1
+      prisma: ^4.7.1
     dependencies:
-      prisma: 4.1.1
+      prisma: 4.7.1
     devDependencies:
       '@typescript-eslint/eslint-plugin': 5.32.0_ifntlqs3gqszrwrfamf3vm2piu
       '@typescript-eslint/parser': 5.32.0_et63c6hdcbxumioq5v75e5l7ca
@@ -300,6 +300,11 @@ packages:
   /@prisma/engines/4.1.1:
     resolution: {integrity: sha512-DCw8L/SS0IXqmj5IW/fMxOXiifnsfjBzDfRhf0j3NFWqvMCh9OtfjmXQZxVgI2mwvJLc/5jzXhkiWT39qS09dA==}
     requiresBuild: true
+
+  /@prisma/engines/4.7.1:
+    resolution: {integrity: sha512-zWabHosTdLpXXlMefHmnouhXMoTB1+SCbUU3t4FCmdrtIOZcarPKU3Alto7gm/pZ9vHlGOXHCfVZ1G7OIrSbog==}
+    requiresBuild: true
+    dev: false
 
   /@tootallnate/once/1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
@@ -3059,6 +3064,15 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.1.1
+
+  /prisma/4.7.1:
+    resolution: {integrity: sha512-CCQP+m+1qZOGIZlvnL6T3ZwaU0LAleIHYFPN9tFSzjs/KL6vH9rlYbGOkTuG9Q1s6Ki5D0LJlYlW18Z9EBUpGg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.7.1
+    dev: false
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
