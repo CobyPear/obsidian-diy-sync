@@ -16,5 +16,5 @@ services:
         - configs/**
     disk:
       name: data
-      mountPath: /data
+      mountPath: /data/
       sizeGB: 1
