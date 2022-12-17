@@ -7,7 +7,7 @@
     "dev:server": "pnpm -F './server' dev",
     "dev:plugin": "pnpm -F './plugin' dev",
     "build:configs": "pnpm -F './configs/**' build",
-    "build:server": "pnpm prisma-generate && pnpm prisma-db-push && pnpm -F './server' build:prod",
+    "build:server": "pnpm prisma-generate && pnpm -F './server' build:prod",
     "start:server": "pnpm -F './server' start:prod",
     "test:server": "pnpm -F './server' test",
     "server:test:watch": "pnpm -F './server' test:watch",
