@@ -10,7 +10,7 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: DATABASE_URL
-        value: file:/data/db
+        value: file:/data/sqlite.db
 
     buildCommand: pnpm i && pnpm build:server
     startCommand: pnpm start:server
