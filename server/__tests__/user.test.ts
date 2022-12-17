@@ -229,13 +229,14 @@ describe("/api/logout", () => {
 
       expect(response.body).toEqual([
         {
-          name: "another test note.md",
+          title: "another test note",
+          slug: "another-test-note",
           content:
             "---\n" +
             "font: matter\n" +
             "teset: value\n" +
             "---\n" +
-            "#tag1 #tag2 #published\n" +
+            "#tag1 #tag2 \n" +
             "\n" +
             "# My test note 2\n" +
             "Here is a paragraph with some text blah blah blah.\n" +
