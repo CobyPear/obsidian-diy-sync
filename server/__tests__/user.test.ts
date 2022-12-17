@@ -69,7 +69,9 @@ describe("/api/user", () => {
 
     expect(access_token).toBeDefined();
     expect(refresh_token).toBeDefined();
-    expect(response.body.message).toEqual(`${users[1].username} and associated vault(s) deleted successfully`);
+    expect(response.body.message).toEqual(
+      `${users[1].username} and associated vault(s) deleted successfully`
+    );
     expect(
       await prisma.user.findUnique({
         where: { username: users[1].username },
@@ -217,5 +219,32 @@ describe("/api/logout", () => {
       .post("/api/logout")
       .send({ username: "thisuserdoesntexist" })
       .expect(404);
+  });
+
+  describe("/api/blog", () => {
+    it("should return nodes marked as published through hashtag or fontmatter", async () => {
+      const response = await server
+        .get(`/api/blog?vault=${vaults[0].name}`)
+        .expect(200);
+
+      expect(response.body).toEqual([
+        {
+          title: "another test note",
+          slug: "another-test-note",
+          content:
+            "---\n" +
+            "font: matter\n" +
+            "teset: value\n" +
+            "---\n" +
+            "#tag1 #tag2 \n" +
+            "\n" +
+            "# My test note 2\n" +
+            "Here is a paragraph with some text blah blah blah.\n" +
+            "\n" +
+            "Linebreak!\n" +
+            "\n",
+        },
+      ]);
+    });
   });
 });
