@@ -5,12 +5,12 @@ services:
 
     env: node
     envVars:
-    - key: JWT_ACCESS_SECRET
-      generatedValue: true
-    - key: JWT_REFRESH_SECRET
-      generatedValue: true
-    - key: DATABASE_URL
-      value: file:/data/db
+      - key: JWT_ACCESS_SECRET
+        generatedValue: true
+      - key: JWT_REFRESH_SECRET
+        generatedValue: true
+      - key: DATABASE_URL
+        value: file:/data/db
 
     buildCommand: pnpm i && pnpm build:server
     startCommand: pnpm start:server
