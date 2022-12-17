@@ -54,7 +54,7 @@ I have made the server to be deployable to [render.com](https://render.com) whic
 
 Click the button below to get started!
 
-![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 
 ## Auth
 
@@ -72,7 +72,7 @@ I would like to implement a OTP feature which takes in an email or phone number 
 
 - Sync on save
 - Add routes to the server to be able to grab single nodes, or nodes by tag
-- Add `/blogs` route to the server that serves nodes with a #published tag and/or `published: true` fontmattter.
+- Add `/blogs` route to the server that serves nodes with a #published tag and/or `published: true` frontmattter.
 - "magic link" or OTP login
 - Media storage
 - Add support for other DBs
