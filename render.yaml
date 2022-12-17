@@ -1,7 +1,17 @@
 services:
   - type: web
     name: obsidian-node-sync-server
+    region: ohio
+
     env: node
+    envVars:
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: file:/data/sqlite.db
+
     buildCommand: pnpm i && pnpm build:server
     startCommand: pnpm start:server
     # only build if anything in the server workspace changes
@@ -16,5 +26,5 @@ services:
         - configs/**
     disk:
       name: data
-      mountPath: /data
+      mountPath: /data/
       sizeGB: 1

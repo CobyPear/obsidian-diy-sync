@@ -10,7 +10,9 @@
     "build:server": "pnpm -F './server' build:prod",
     "start:server": "pnpm -F './server' start:prod",
     "test:server": "pnpm -F './server' test",
-    "server:test:watch": "pnpm -F './server' test:watch"
+    "server:test:watch": "pnpm -F './server' test:watch",
+    "prisma-generate": "pnpm prisma generate --schema=./server/db/schema.prisma",
+    "prisma-db-push": "pnpm prisma db push --schema=./server/db/schema.prisma --skip-generate"
   },
   "keywords": [],
   "author": "CobyPear",
@@ -22,7 +24,7 @@
     "prettier": "^2.7.1"
   },
   "dependencies": {
-    "prisma": "^4.1.1"
+    "prisma": "^4.7.1"
   },
   "pnpm": {
     "overrides": {

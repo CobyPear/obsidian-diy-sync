@@ -14,6 +14,7 @@ export const deleteUser = async (
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include',
       body: JSON.stringify({ username }),
     });
     if (res.ok) {
