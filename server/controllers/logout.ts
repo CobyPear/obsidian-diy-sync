@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../db";
+import { clearCookies } from "../utils/clearCookies";
 
 export const logoutControllers = {
   post: async (req: Request, res: Response) => {
@@ -21,17 +22,8 @@ export const logoutControllers = {
     }
 
     console.log(`logging out ${username}...`);
-
-    res.clearCookie("access_token", {
-      sameSite: "none",
-      secure: true,
-      httpOnly: true,
-    });
-    res.clearCookie("refresh_token", {
-      sameSite: "none",
-      secure: true,
-      httpOnly: true,
-    });
+    clearCookies(res);
+    delete req.user;
 
     return res.json({ message: `Logged out ${username} successfully!` });
   },

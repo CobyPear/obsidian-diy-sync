@@ -1,11 +1,12 @@
 import { prisma } from "../db/index";
 import jwt from "jsonwebtoken";
+import type { ReqUser } from "../types";
 
 type TokenType = "access" | "refresh";
 
 export const generateToken = async (
-  userId: number,
-  username: string,
+  userId: ReqUser['userId'],
+  username: ReqUser['username'],
   expiresIn: string,
   type: TokenType
 ) => {

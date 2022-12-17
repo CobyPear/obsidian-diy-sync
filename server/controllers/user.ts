@@ -3,6 +3,7 @@ import { prisma } from "../db/index";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/generateToken";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { clearCookies } from "../utils/clearCookies";
 
 const saltRounds = 10;
 // TODO: need a way to create a user from an API route (or do i?)
@@ -50,9 +51,7 @@ export const userControllers = {
         // send response to user
         res.json({
           message: "User created!",
-          user: {
-            username: newUser.username,
-          },
+          username: newUser.username,
         });
       }
     } catch (error) {
@@ -66,6 +65,38 @@ export const userControllers = {
         // if error, send error
         res.status(500).json({ prismaError: error });
       }
+    }
+  },
+  delete: async (req: Request, res: Response) => {
+    console.log(req.user);
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Please log in to the user account that needs to be deleted",
+      });
+    }
+    try {
+      const username = req.user.username;
+
+      const deleted = await prisma.user.delete({
+        where: {
+          username,
+        },
+      });
+      if (deleted) {
+        clearCookies(res);
+        delete req.user;
+
+        return res.status(200).json({
+          message: `${username} and associated vault(s) deleted successfully`,
+        });
+      } else {
+        return res
+          .status(404)
+          .json({ message: "No user was deleted. Does the user exist?" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json();
     }
   },
 };

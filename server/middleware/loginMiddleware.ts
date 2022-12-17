@@ -58,6 +58,8 @@ export const loginMiddleware = async (
       httpOnly: true,
     });
 
+    req.user = { username: user.username, userId: user.id };
+
     next();
   }
 };
