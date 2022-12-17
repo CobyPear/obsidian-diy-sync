@@ -6,9 +6,9 @@ services:
     env: node
     envVars:
       - key: JWT_ACCESS_SECRET
-        generatedValue: true
+        generateValue: true
       - key: JWT_REFRESH_SECRET
-        generatedValue: true
+        generateValue: true
       - key: DATABASE_URL
         value: file:/data/db
 
