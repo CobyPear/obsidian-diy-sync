@@ -24,7 +24,7 @@
     "prettier": "^2.7.1"
   },
   "dependencies": {
-    "prisma": "^4.1.1"
+    "prisma": "^4.7.1"
   },
   "pnpm": {
     "overrides": {

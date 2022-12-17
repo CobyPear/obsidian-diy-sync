@@ -80,7 +80,7 @@ importers:
       morgan: ^1.10.0
       nodemon: ^2.0.19
       prettier: ^2.7.1
-      prisma: ^4.1.1
+      prisma: ^4.7.1
       sqlite3: ^5.0.11
       supertest: ^6.3.3
       typescript: ^4.7.4
@@ -88,7 +88,7 @@ importers:
       vitest-environment-obsync: workspace:*
       winston: ^3.8.1
     dependencies:
-      '@prisma/client': 4.7.1_prisma@4.1.1
+      '@prisma/client': 4.7.1_prisma@4.7.1
       bcrypt: 5.0.1
       cors: 2.8.5
       express: 4.18.1
@@ -110,7 +110,7 @@ importers:
       eslint: 8.20.0
       nodemon: 2.0.19
       prettier: 2.7.1
-      prisma: 4.1.1
+      prisma: 4.7.1
       supertest: 6.3.3
       typescript: 4.7.4
       vitest: 0.25.3
@@ -279,7 +279,7 @@ packages:
     dev: false
     optional: true
 
-  /@prisma/client/4.7.1_prisma@4.1.1:
+  /@prisma/client/4.7.1_prisma@4.7.1:
     resolution: {integrity: sha512-/GbnOwIPtjiveZNUzGXOdp7RxTEkHL4DZP3vBaFNadfr6Sf0RshU5EULFzVaSi9i9PIK9PYd+1Rn7z2B2npb9w==}
     engines: {node: '>=14.17'}
     requiresBuild: true
@@ -290,21 +290,16 @@ packages:
         optional: true
     dependencies:
       '@prisma/engines-version': 4.7.1-1.272861e07ab64f234d3ffc4094e32bd61775599c
-      prisma: 4.1.1
+      prisma: 4.7.1
     dev: false
 
   /@prisma/engines-version/4.7.1-1.272861e07ab64f234d3ffc4094e32bd61775599c:
     resolution: {integrity: sha512-Bd4LZ+WAnUHOq31e9X/ihi5zPlr4SzTRwUZZYxvWOxlerIZ7HJlVa9zXpuKTKLpI9O1l8Ec4OYCKsivWCs5a3Q==}
     dev: false
 
-  /@prisma/engines/4.1.1:
-    resolution: {integrity: sha512-DCw8L/SS0IXqmj5IW/fMxOXiifnsfjBzDfRhf0j3NFWqvMCh9OtfjmXQZxVgI2mwvJLc/5jzXhkiWT39qS09dA==}
-    requiresBuild: true
-
   /@prisma/engines/4.7.1:
     resolution: {integrity: sha512-zWabHosTdLpXXlMefHmnouhXMoTB1+SCbUU3t4FCmdrtIOZcarPKU3Alto7gm/pZ9vHlGOXHCfVZ1G7OIrSbog==}
     requiresBuild: true
-    dev: false
 
   /@tootallnate/once/1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
@@ -3057,14 +3052,6 @@ packages:
     hasBin: true
     dev: true
 
-  /prisma/4.1.1:
-    resolution: {integrity: sha512-yw50J8If2dKP4wYIi695zthsCASQFHiogGvUHHWd3falx/rpsD6Sb1LMLRV9nO3iGG3lozxNJ2PSINxK7xwdpg==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    requiresBuild: true
-    dependencies:
-      '@prisma/engines': 4.1.1
-
   /prisma/4.7.1:
     resolution: {integrity: sha512-CCQP+m+1qZOGIZlvnL6T3ZwaU0LAleIHYFPN9tFSzjs/KL6vH9rlYbGOkTuG9Q1s6Ki5D0LJlYlW18Z9EBUpGg==}
     engines: {node: '>=14.17'}
@@ -3072,7 +3059,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.7.1
-    dev: false
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
