@@ -4,10 +4,7 @@
   "description": "",
   "main": "./build/server.js",
   "scripts": {
-    "build:prod": "pnpm prisma-generate && pnpm prisma-db-push && tsc",
-    "prisma-generate": "pnpm prisma generate --schema=./db/schema.prisma",
-    "prisma-db-push": "pnpm prisma db push --schema=./db/schema.prisma --skip-generate --force-reset --accept-data-loss",
-    "clean": "rm -rf  ./build/*.js ./build/**/*.js && echo 'Removed *.js files!'",
+    "build:prod": "tsc",
     "dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
     "start:prod": "NODE_ENV=production node ./build/server.js",
     "test": "vitest --run",
