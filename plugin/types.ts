@@ -1,7 +1,7 @@
 export interface NodeSyncPluginSettings {
   apiHost: string;
   endpoint: string;
-  authToken?: string;
+  clientSecret: string;
   vaultToFetch?: string;
 }
 

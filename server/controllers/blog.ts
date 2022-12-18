@@ -1,4 +1,5 @@
 import { prisma } from "../db";
+import type { Node } from "@prisma/client";
 import type { Request, Response } from "express";
 
 export const blogControllers = {
@@ -28,20 +29,27 @@ export const blogControllers = {
       }
 
       const publishedNodes = vaultFromDb?.nodes
-        .filter(({ content }) => {
+        .filter(({ content }: Node) => {
           return (
             content.includes("published: true") ||
             content.includes("#published")
           );
         })
-        .map(({ name, content }) => {
+        .map(({ name, content, ctime, mtime }: Node) => {
           const title = name.replace(/\.md$/g, "");
           const slug = title.replace(/\s/g, "-").toLowerCase();
+          const createdAt = new Date(Number(ctime)).toLocaleDateString("en-US");
+          const modifiedAt = new Date(Number(mtime)).toLocaleDateString(
+            "en-US"
+          );
+
           content = content.replace("#published", "");
           return {
             title,
             slug,
             content,
+            createdAt,
+            modifiedAt,
           };
         });
 
