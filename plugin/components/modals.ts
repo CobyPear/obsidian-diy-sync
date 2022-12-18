@@ -12,22 +12,27 @@ export class LoginModal extends Modal {
   // is this a login modal
   // or a create user modal?
   modalType: modalType;
+  clientSecret: string;
   isWarningShown = false;
 
   constructor(
     app: App,
     plugin: NodeSyncPlugin,
     url: string,
-    modalType: modalType
+    modalType: modalType,
+    clientSecret: string
   ) {
     super(app);
     this.plugin = plugin;
     this.url = url;
     this.modalType = modalType;
+    this.clientSecret = clientSecret;
   }
 
   async onSubmit(username: string, password: string) {
     try {
+      const secret =
+        this.modalType === "user" ? { secret: this.clientSecret } : {};
       // POST to /api/login
       // if 200 response, the token should be accessible in a cookie?
       // otherwise, open a new modal with the error
@@ -37,7 +42,7 @@ export class LoginModal extends Modal {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, ...secret }),
       });
       const data = await res.json();
       if (!data.username) {

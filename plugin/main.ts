@@ -10,6 +10,7 @@ const DEFAULT_SETTINGS: NodeSyncPluginSettings = {
   apiHost: "http://localhost:3001",
   endpoint: "/api/vault",
   vaultToFetch: "default",
+  clientSecret: "keyboard_cat!!",
 };
 
 export default class NodeSyncPlugin extends Plugin {
@@ -181,7 +182,8 @@ export default class NodeSyncPlugin extends Plugin {
           this.app,
           this,
           this.settings.apiHost,
-          "login"
+          "login",
+          this.settings.clientSecret
         );
         return loginModal.open();
       },
@@ -196,7 +198,8 @@ export default class NodeSyncPlugin extends Plugin {
           this.app,
           this,
           this.settings.apiHost,
-          "user"
+          "user",
+          this.settings.clientSecret
         );
         return loginModal.open();
       },
@@ -311,5 +314,21 @@ class NodeSyncSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
+    // client secret setting
+    new Setting(containerEl)
+      .setName("Client Secret")
+      .setDesc(
+        "A string shared between the client and server. Keep this secret and only share with valid users of your server."
+      )
+      .addText((text) => {
+        text.inputEl.type = "password";
+        return text
+          .setPlaceholder("Enter the client secret")
+          .setValue(this.plugin.settings.vaultToFetch as string)
+          .onChange(async (value) => {
+            this.plugin.settings.clientSecret = value;
+            await this.plugin.saveSettings();
+          });
+      });
   }
 }

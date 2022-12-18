@@ -10,7 +10,13 @@ const saltRounds = 10;
 export const userControllers = {
   // create a user
   post: async (req: Request, res: Response) => {
-    const { username, password: plaintextPw } = req.body;
+    const { username, password: plaintextPw, secret } = req.body;
+    if (process.env.CLIENT_SECRET !== secret) {
+      return res.status(403).json({
+        message:
+          "Invalid client secret. If you are a valid user of the server, ask the owner for the client secret",
+      });
+    }
     // salt and hash pw
     try {
       const hashedPw = await bcrypt.hash(plaintextPw, saltRounds);

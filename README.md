@@ -31,6 +31,7 @@ This is a monorepo made with pnpm workspaces.
    ```
    JWT_REFRESH_SECRET=some secret here!
    JWT_ACCESS_SECRET=some different secret here!
+   CLIENT_SECRET=yet another secret here
    ```
 
 1. Now in the monorepo, you can start the plugin in watch mode with `pnpm dev:plugin`
@@ -59,6 +60,8 @@ Click the button below to get started!
 ## Auth
 
 Auth is achieved through username and password exchanged for tokens. There is no password length or complexity requirement.
+
+A user can only be created from a client if the client secret is present on both client and server. This way, not just anybody who knows your server's endpoint can create a new user.
 
 Please use a secure password. Also do not share your backend URL, unless you want to share a backend; multiple users and vaults are supported, however at this time you cannot share vaults between users (Open to supporting this).
 
