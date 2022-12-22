@@ -42,7 +42,9 @@ Before using any commands, navigate to **Settings** > **Nodejs Sync Plugin** and
 
 The `Vault to Fetch` is the name of a vault that has previously been sync'd. This will usually be the name of the vault you are working in, but if you are signing in from a new machine you may want to use this to grab notes from a previous sync.
 
-After configuring the server hostname, create a new user:
+In order to prevent anyone with your server's name to create new users and start syncing vaults, there is a client secrent that must be known to both client and server. Without this secret, you can not create a new user.
+
+After configuring the server hostname and client secret, create a new user:
 
 1. In the command pallete search for the **Nodejs Sync Plugin: Create New User** command
 2. Fill out the form with a secure username and password. The password is
