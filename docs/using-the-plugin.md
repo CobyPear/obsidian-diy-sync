@@ -32,8 +32,7 @@ In order to use a different database, you will need to edit the schemas in the
 `server/db` directory. You will also need to configure hosting for the database
 or containerize the application.
 
-See [Prisma's documentation](https://prisma.io/docs) for more information on
-Database Connectors.
+See [Prisma's documentation](https://prisma.io/docs) for more information on Database Connectors.
 
 ## Using The Plugin
 
@@ -52,3 +51,15 @@ change it. Please use a password manager :smile:
 
 Now you will should able to use the rest of the commands from the command
 palette.
+
+### Sync a Vault
+To sync your vault with the server, make sure you are logged in as the correct user and use the **Sync Vault** command. If the vault doesn't exist yet it will be created. If it does exist it will be updated with the latest changes. There is no smart diffing at the moment.
+
+### Get a Vault
+The vault that will be fetched needs to be set in the plugin's settings. If this is not set, the server will not know which vault to send back. This is because you can **Get** a vault on an empty vault in order to sync a new machine with the server. The vault name is the same as the name of the vault when you first Sync it.
+
+Currently, if you delete a file and Get the vault, the file will be restored. Getting a vault should not override your current changes if they are different from your sync'd version. I am open to developing some logic around this.
+
+### Delete a User
+Only the currently logged in user can be deleted. **BE CAREFUL!!** If you delete the current user, all data in the server belonging to that user (vaualts, nodes) will be deleted as well.
+Make sure you have a copy of your vault backed up somewhere before deleting a user!

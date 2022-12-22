@@ -222,7 +222,7 @@ describe("/api/logout", () => {
   });
 
   describe("/api/blog", () => {
-    it("should return nodes marked as published through hashtag or fontmatter", async () => {
+    it("should return nodes marked as published through hashtag or frontmatter", async () => {
       const response = await server
         .get(`/api/blog?vault=${vaults[0].name}`)
         .expect(200);
