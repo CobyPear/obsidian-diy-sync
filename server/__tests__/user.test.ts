@@ -5,10 +5,12 @@ import { nodes1, nodes2 } from "./mockData/nodes";
 import { it, describe, expect, beforeAll } from "vitest";
 
 describe("/api/user", () => {
+  const secret = process.env.CLIENT_SECRET;
+
   it("should create a user", async () => {
     const response = await server
       .post("/api/user")
-      .send(users[0])
+      .send({ ...users[0], secret })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
@@ -30,7 +32,7 @@ describe("/api/user", () => {
   it("should throw an error if username already exists", async () => {
     await server
       .post("/api/user")
-      .send(users[0])
+      .send({ ...users[0], secret })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(400);
@@ -39,7 +41,7 @@ describe("/api/user", () => {
   it("should allow multiple users", async () => {
     const response = await server
       .post("/api/user")
-      .send(users[1])
+      .send({ ...users[1], secret })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
@@ -60,7 +62,7 @@ describe("/api/user", () => {
   it("should delete the current user", async () => {
     const response = await server
       .delete("/api/user")
-      .send({ username: users[1].username })
+      .send({ username: users[1].username, secret })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
@@ -231,6 +233,8 @@ describe("/api/logout", () => {
         {
           title: "another test note",
           slug: "another-test-note",
+          createdAt: "10/29/2022",
+          modifiedAt: "10/29/2022",
           content:
             "---\n" +
             "font: matter\n" +
