@@ -64,10 +64,6 @@ export const vaultControllers = {
         if (foundVault) {
           console.log(`Found vault ${vault} Adding nodes...`);
           vaultId = foundVault.id;
-          resultVault = await createOrUpdateNodes({
-            nodes,
-            vaultId: foundVault.id,
-          });
         } else {
           const newVault = await prisma.vault.create({
             data: {
@@ -84,9 +80,17 @@ export const vaultControllers = {
 
         resultVault?.nodes.length &&
           (await Promise.all(
-            resultVault?.nodes?.map(async ({ content, name }) => {
-              await webmentionSend({ content, name });
-            })
+            resultVault?.nodes?.map(
+              async ({ path, content, name, webmentionTime, mtime }) => {
+                await webmentionSend({
+                  path,
+                  content,
+                  name,
+                  webmentionTime,
+                  mtime,
+                });
+              }
+            )
           ));
 
         res.json({

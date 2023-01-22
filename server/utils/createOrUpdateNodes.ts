@@ -8,14 +8,23 @@ export const createOrUpdateNodes = async ({
   nodes: Node[];
   vaultId: Vault["id"];
 }) => {
-  for (const { content, name, extension, path, ctime, mtime } of nodes) {
+  for (const {
+    content,
+    name,
+    extension,
+    path,
+    ctime,
+    mtime,
+    webmentionTime,
+  } of nodes) {
     const data = {
-      content: content,
-      name: name,
-      extension: extension,
-      path: path,
-      ctime: ctime,
-      mtime: mtime,
+      content,
+      name,
+      extension,
+      path,
+      ctime,
+      mtime,
+      webmentionTime,
     };
 
     try {
