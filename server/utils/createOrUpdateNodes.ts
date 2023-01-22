@@ -36,6 +36,7 @@ export const createOrUpdateNodes = async ({
       return;
     }
   }
+
   return await prisma.vault.findUnique({
     where: {
       id: vaultId,

@@ -20,6 +20,7 @@ const corsOptions: CorsOptions = {
 };
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morganMiddleware);
 // ignore cors for blog route for now
 app.get("/api/blog", blogControllers.get);
