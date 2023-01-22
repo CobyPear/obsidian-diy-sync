@@ -83,6 +83,13 @@ pnpm prisma-generate && pnpm prisma-db-push
 This will generate the prisma client and create the database.
 For some reason this is not possible on the first build. It might be possible to run these before the first start instead of build but I need to experiment more.
 
+#### Webmention Send
+
+This server now supports the webmention send spec. Any post tagged with `#published` and `#webmention` will look for an anchor tag with the `u-in-reply-to` class. If the link is found it will POST against the node's slug and the given `WEBMENTION_BLOG_URL` env var. Make sure to fill out the `WEBMENTION_USER_AGENT` env var well.
+
+It is recommended to write webmention replies with microformat2 classes and structured HTML. I'll be on the lookout for some sort of plugin that auto tags my posts with these classes!
+
+Note: This function only covers 3.1.3 "sender notifies receiver" portion of the spec. You will need to implement the rest of the spec yourself or find another solution. It is probably better to go with https://webmention.io/ or https://webmention.herokuapp.com/. I wrote this and a webmention implementation for fun and educational purposes!
 ## Auth
 
 Auth is achieved through username and password exchanged for tokens. There is no password length or complexity requirement.
