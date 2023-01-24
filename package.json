@@ -30,5 +30,8 @@
     "overrides": {
       "vitest-environment-obsync": "workspace:*"
     }
+  },
+  "engines": {
+    "node": ">=18 <19"
   }
 }
