@@ -21,7 +21,7 @@ model Vault {
     name      String
     nodes     Node[]
     User      User     @relation(fields: [user], references: [username], onDelete: Cascade)
-    user      String   @unique
+    user      String
 }
 
 // A node is something in a vault
