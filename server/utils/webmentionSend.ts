@@ -28,38 +28,56 @@ export const webmentionSend = async ({
 
     if (webmentionTarget) {
       let targetDOM;
+      let validPermalink;
       try {
         const targetRes = await fetch(webmentionTarget, {
           headers: {
             "User-Agent": `${process.env.WEBMENTION_USER_AGENT} Webmention`,
           },
         });
+        const linkHeader = targetRes.headers.get("Link");
+        if (linkHeader) {
+          const [match] = linkHeader.match(
+            /(?:<(.*)>; (?=(?:rel="?webmention"?)))/g
+          ) || [null];
+
+          validPermalink =
+            match &&
+            match?.trim().replace("<", "").replace(">", "").replace(";", "");
+
+          validPermalink = !validPermalink?.startsWith("http")
+            ? new URL(validPermalink as string, webmentionTarget).href
+            : validPermalink;
+        }
         targetDOM = parse(await targetRes.text());
       } catch (error) {
         console.error("Error fetching webmention target", error);
         return;
       }
-      const validPermalink = targetDOM
-        .querySelector("[rel=webmention]")
-        ?.getAttribute("href");
-
+      validPermalink =
+        validPermalink ||
+        targetDOM.querySelector("[rel=webmention]")?.getAttribute("href");
       if (validPermalink) {
+        console.log("POSTing to ", validPermalink);
         try {
           const title = name.replace(/\.md$/g, "");
           const slug = title.replace(/\s/g, "-").toLowerCase();
           const source = `${process.env.BLOG_URL}/${slug}`;
-          const req = await fetch(
-            `${validPermalink}?target=${webmentionTarget}&source=${source}`,
-            {
-              method: "POST",
-              headers: {
-                "User-Agent": `${process.env.WEBMENTION_USER_AGENT} Webmention`,
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            }
-          );
+          const params = new URLSearchParams({
+            source,
+            target: webmentionTarget,
+          });
+          const req = await fetch(`${validPermalink}?${params.toString()}`, {
+            method: "POST",
+            body: params,
+            headers: {
+              "User-Agent": `${process.env.WEBMENTION_USER_AGENT} Webmention`,
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+          console.log(`${validPermalink}?${params}`);
           console.log("Webmention POST status:", req.status);
-          const result = await req.json();
+          const result = await req.text();
           console.log("Webmention POST result:", result);
           // update webmention time so that we don't spam the target webmention server
           if (webmentionTime !== mtime) {
@@ -81,7 +99,7 @@ export const webmentionSend = async ({
           console.log(error);
         }
       }
-      console.error("No valid permalink found in target");
+      console.error(`No valid permalink found in ${webmentionTarget}`);
     }
     console.error("No webmentionTarget found in content");
   }
