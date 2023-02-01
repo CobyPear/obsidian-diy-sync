@@ -44,10 +44,6 @@ export const webmentionSend = async ({
           validPermalink =
             match &&
             match?.trim().replace("<", "").replace(">", "").replace(";", "");
-
-          validPermalink = !validPermalink?.startsWith("http")
-            ? new URL(validPermalink as string, webmentionTarget).href
-            : validPermalink;
         }
         targetDOM = parse(await targetRes.text());
       } catch (error) {
@@ -57,6 +53,10 @@ export const webmentionSend = async ({
       validPermalink =
         validPermalink ||
         targetDOM.querySelector("[rel=webmention]")?.getAttribute("href");
+
+      validPermalink = !validPermalink?.startsWith("http")
+        ? new URL(validPermalink as string, webmentionTarget).href
+        : validPermalink;
       if (validPermalink) {
         console.log("POSTing to ", validPermalink);
         try {
