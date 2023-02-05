@@ -1,6 +1,6 @@
 import { Node } from '@prisma/client';
 import { prisma } from '../db';
-import { parse, valid } from 'node-html-parser';
+import { parse } from 'node-html-parser';
 //  Discovery for webmentions:
 // webmention POST
 type n = 'path' | 'content' | 'name' | 'mtime' | 'webmentionTime';
