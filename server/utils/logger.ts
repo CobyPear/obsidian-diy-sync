@@ -15,7 +15,7 @@ export const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
 });
 export const morganMiddleware = morgan(
-  ":method :status :url - :response-time ms",
+  ":method :status :url - :remote-addr - :response-time ms",
   {
     stream: {
       write: (message) => {
