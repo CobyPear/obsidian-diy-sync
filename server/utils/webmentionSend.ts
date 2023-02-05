@@ -1,6 +1,6 @@
 import { Node } from '@prisma/client';
 import { prisma } from '../db';
-import { parse } from 'node-html-parser';
+import { parse, valid } from 'node-html-parser';
 //  Discovery for webmentions:
 // webmention POST
 type n = 'path' | 'content' | 'name' | 'mtime' | 'webmentionTime';
@@ -62,10 +62,8 @@ export const webmentionSend = async ({
 				validPermalink ||
 				targetDOM.querySelector('[rel^=webmention]')?.getAttribute('href');
 
-			// instead of using new URL() here which would be better imo
-			// using string concat b/c it passes test #23 of webmentions.rocks :)
 			validPermalink = !validPermalink?.startsWith('http')
-				? `${webmentionTarget}/${validPermalink}`
+				? new URL(validPermalink as string, webmentionTarget).href
 				: validPermalink;
 			if (validPermalink) {
 				console.log('POSTing to ', validPermalink);
