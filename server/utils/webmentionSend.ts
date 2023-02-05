@@ -60,11 +60,15 @@ export const webmentionSend = async ({
 
 			validPermalink =
 				validPermalink ||
-				targetDOM.querySelector('[rel^=webmention]')?.getAttribute('href');
+				targetDOM
+					.querySelectorAll('[rel^=webmention]')
+					.find((element) => element?.hasAttribute('href'))
+					?.getAttribute('href');
 
 			validPermalink = !validPermalink?.startsWith('http')
 				? new URL(validPermalink as string, webmentionTarget).href
 				: validPermalink;
+
 			if (validPermalink) {
 				console.log('POSTing to ', validPermalink);
 				try {
@@ -75,16 +79,21 @@ export const webmentionSend = async ({
 						source,
 						target: webmentionTarget,
 					});
-					const req = await fetch(`${validPermalink}?${params.toString()}`, {
-						method: 'POST',
-						body: params,
-						redirect: 'follow',
-						headers: {
-							'User-Agent': `${process.env.WEBMENTION_USER_AGENT} Webmention`,
-							'Content-Type': 'application/x-www-form-urlencoded',
-						},
-					});
-					console.log(`${validPermalink}?${params}`);
+					// maintain query params?
+					const prefix = /\?[\w\d]+=/.test(validPermalink) ? '&' : '?';
+					const req = await fetch(
+						`${validPermalink}${prefix}${params.toString()}`,
+						{
+							method: 'POST',
+							body: params,
+							redirect: 'follow',
+							headers: {
+								'User-Agent': `${process.env.WEBMENTION_USER_AGENT} Webmention`,
+								'Content-Type': 'application/x-www-form-urlencoded',
+							},
+						}
+					);
+					console.log(`${validPermalink}${prefix}${params}`);
 					console.log('Webmention POST status:', req.status);
 					const result = await req.text();
 					console.log('Webmention POST result:', result);
