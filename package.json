@@ -1,37 +1,40 @@
 {
-  "name": "obsidian-diy-sync",
-  "version": "0.1.0",
-  "description": "Obsidian plugin that syncs data to an sqlite backed express.js server",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:server": "pnpm -F './server' dev",
-    "dev:plugin": "pnpm -F './plugin' dev",
-    "build:configs": "pnpm -F './configs/**' build",
-    "build:server": "pnpm prisma-generate && pnpm -F './server' build:prod",
-    "start:server": "pnpm -F './server' start:prod",
-    "test:server": "pnpm -F './server' test",
-    "server:test:watch": "pnpm -F './server' test:watch",
-    "prisma-generate": "pnpm prisma generate --schema=./server/db/schema.prisma",
-    "prisma-db-push": "pnpm prisma db push --schema=./server/db/schema.prisma --skip-generate"
-  },
-  "keywords": [],
-  "author": "CobyPear",
-  "license": "MIT",
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
-    "eslint": "^8.20.0",
-    "prettier": "^2.7.1"
-  },
-  "dependencies": {
-    "prisma": "^4.7.1"
-  },
-  "pnpm": {
-    "overrides": {
-      "vitest-environment-obsync": "workspace:*"
-    }
-  },
-  "engines": {
-    "node": ">=18 <19"
-  }
+	"name": "obsidian-diy-sync",
+	"version": "0.1.0",
+	"description": "Obsidian plugin that syncs data to an sqlite backed express.js server",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev:server": "pnpm -F './server' dev",
+		"dev:plugin": "pnpm -F './plugin' dev",
+		"build:configs": "pnpm -F './configs/**' build",
+		"build:server": "pnpm prisma-generate && pnpm -F './server' build:prod",
+		"start:server": "pnpm -F './server' start:prod",
+		"test:server": "pnpm -F './server' test",
+		"server:test:watch": "pnpm -F './server' test:watch",
+		"prisma-generate": "pnpm prisma generate --schema=./server/db/schema.prisma",
+		"prisma-db-push": "pnpm prisma db push --schema=./server/db/schema.prisma --skip-generate"
+	},
+	"keywords": [],
+	"author": "CobyPear",
+	"license": "MIT",
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^5.50.0",
+		"@typescript-eslint/parser": "^5.50.0",
+		"eslint": "^8.33.0",
+		"prettier": "^2.8.3"
+	},
+	"dependencies": {
+		"prisma": "^4.9.0"
+	},
+	"pnpm": {
+		"overrides": {
+			"vitest-environment-obsync": "workspace:*"
+		}
+	},
+	"engines": {
+		"node": ">=18 <19"
+	},
+	"prisma": {
+		"schema": "./server/db/schema.prisma"
+	}
 }

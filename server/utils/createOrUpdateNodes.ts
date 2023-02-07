@@ -15,7 +15,6 @@ export const createOrUpdateNodes = async ({
     path,
     ctime,
     mtime,
-    webmentionTime,
   } of nodes) {
     const data = {
       content,
@@ -24,7 +23,6 @@ export const createOrUpdateNodes = async ({
       path,
       ctime,
       mtime,
-      webmentionTime,
     };
 
     try {
