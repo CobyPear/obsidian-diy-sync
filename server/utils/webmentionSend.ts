@@ -16,7 +16,7 @@ export const webmentionSend = async ({
 	mtime,
 	webmentions,
 }: Pick<Node, n> & { webmentions: Webmention[] }) => {
-	if (content.includes('#webmention') && content.includes('#published')) {
+	if (content.includes('#webmention') && /#published|#unpublished|#deleted/.test(content)) {
 		const postDOM = parse(content);
 		// get all webmention targets from the post and from the DB
 		// then dedupe
@@ -145,7 +145,7 @@ export const webmentionSend = async ({
 								webmentionTime: mtime,
 							},
 						});
-						console.log('recored updated', updatedWebmentionRecord);
+						console.log('record updated', updatedWebmentionRecord);
 					}
 				}
 			} catch (error) {
