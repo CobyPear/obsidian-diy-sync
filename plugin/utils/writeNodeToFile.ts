@@ -32,13 +32,14 @@ export const writeNodeToFile = async (
         ctime: Number(node.ctime),
         mtime: Number(node.mtime),
       });
-      console.log(`Wrote file ${node.name} at ${node.path}`);
+      console.log(`Created file ${node.name} at ${node.path}`);
       if (file) {
         // break the content up and put it back in line by line
         const multiLineContent = node.content.split("\n");
         multiLineContent.forEach(
           async (line) => await vault.append(file, `${line}\n`)
         );
+        console.log(`Wrote file ${node.name} at ${node.path}`);
       }
       // Swallow the error?
       // eslint-disable-next-line no-empty

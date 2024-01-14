@@ -17,10 +17,11 @@ const corsOptions: CorsOptions = {
   methods: "GET,OPTIONS,POST,PUT,DELETE",
   origin: "app://obsidian.md",
   credentials: true,
+  preflightContinue: true
 };
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: "50mb", parameterLimit: 10000 }));
 app.use(morganMiddleware);
 // ignore cors for blog route for now
 app.get("/api/blog", blogControllers.get);
