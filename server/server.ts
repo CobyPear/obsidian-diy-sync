@@ -20,10 +20,8 @@ const corsOptions: CorsOptions = {
   preflightContinue: true,
 };
 
-app.use(express.json());
-app.use(
-  express.urlencoded({ extended: true, limit: "250mb", parameterLimit: 10000 })
-);
+app.use(express.json({ limit: "250mb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(morganMiddleware);
 // ignore cors for blog route for now
 app.get("/api/blog", blogControllers.get);
