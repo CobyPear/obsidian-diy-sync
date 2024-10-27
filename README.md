@@ -7,6 +7,7 @@ This is a monorepo made with pnpm workspaces.
 - pnpm
 - node
 - npm
+- podman
 
 ### Technologies Used
 
@@ -15,6 +16,7 @@ This is a monorepo made with pnpm workspaces.
 - Prisma
 - sqlite - this is the default. You may use any DB supported by Prisma
 - obsidian-sample-plugin (used for the plugin template)
+- Docker/podman
 
 ## To get started for local development:
 
@@ -63,6 +65,20 @@ The plugin also has can GET a vault, so you can sync to another vault.
 The server is needed to talk to the database (in this case, sqlite). The server receives a PUT or GET request from the plugin and stores or retrieves the appropriate data.
 
 Media is not currently supported.
+
+### Dockerfile
+
+To build the server into a Docker image (use docker if you prefer):
+
+```sh
+podman build -f Dockerfile -t obsidian-server
+```
+
+and to run it, use the `.env` file created earlier. Note: you may want to mount the sqlite db file from a volume
+
+```sh
+podman run -p 8000:8000 -d --name obsidian-server --env-file=.env obsidian-server:latest
+```
 
 ### The Blog Route
 
