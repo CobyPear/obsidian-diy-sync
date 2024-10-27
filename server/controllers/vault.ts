@@ -1,9 +1,7 @@
-import type { Request, Response } from 'express';
-import type { Vault } from '@prisma/client';
-import { prisma } from '../db';
-import { createOrUpdateNodes } from '../utils/createOrUpdateNodes';
-import { webmentionSend } from '../utils/webmentionSend';
-
+import type { Request, Response } from "express";
+import type { Vault } from "@prisma/client";
+import { prisma } from "../db";
+import { createOrUpdateNodes } from "../utils/createOrUpdateNodes";
 export const vaultControllers = {
 	get: async (req: Request, res: Response) => {
 		const vault = req.query.vault as string;
@@ -11,11 +9,11 @@ export const vaultControllers = {
 		if (!vault) {
 			return res.status(400).json({
 				error:
-					'No vault was sent in the request. Make sure the Vault is set in the plugin options',
+					"No vault was sent in the request. Make sure the Vault is set in the plugin options",
 			});
 		}
 		if (!req.user) {
-			return res.status(401).json({ message: 'Please login' });
+			return res.status(401).json({ message: "Please login" });
 		}
 		try {
 			// get vault from DB
@@ -44,10 +42,10 @@ export const vaultControllers = {
 			} = req;
 			let resultVault;
 			if (!vault) {
-				res.status(400).json({ error: 'No vault was received' });
+				res.status(400).json({ error: "No vault was received" });
 			}
 			if (!req.user) {
-				res.status(401).json({ message: 'Please login' });
+				res.status(401).json({ message: "Please login" });
 			} else if (nodes && vault) {
 				const foundVault = await prisma.vault.findFirst({
 					where: {
@@ -59,7 +57,7 @@ export const vaultControllers = {
 					},
 				});
 
-				let vaultId: Vault['id'];
+				let vaultId: Vault["id"];
 
 				if (foundVault) {
 					console.log(`Found vault ${vault} Adding nodes...`);
@@ -77,23 +75,6 @@ export const vaultControllers = {
 					nodes,
 					vaultId: vaultId,
 				});
-				resultVault?.nodes.length &&
-					(await Promise.all(
-						resultVault?.nodes?.map(async ({ id, content, name, mtime }) => {
-							const webmentions = await prisma.webmention.findMany({
-								where: {
-									nodeId: id,
-								},
-							});
-							await webmentionSend({
-								id,
-								content,
-								name,
-								mtime,
-								webmentions,
-							});
-						})
-					));
 
 				res.json({
 					message: `Vault ${vault} was successfully sync'd!`,
@@ -103,7 +84,7 @@ export const vaultControllers = {
 		} catch (error) {
 			console.error(error);
 			return res.status(500).json({
-				message: 'Something went wrong',
+				message: "Something went wrong",
 				error: error,
 			});
 		}
