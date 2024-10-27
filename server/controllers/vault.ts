@@ -2,8 +2,6 @@ import type { Request, Response } from 'express';
 import type { Vault } from '@prisma/client';
 import { prisma } from '../db';
 import { createOrUpdateNodes } from '../utils/createOrUpdateNodes';
-import { webmentionSend } from '../utils/webmentionSend';
-
 export const vaultControllers = {
 	get: async (req: Request, res: Response) => {
 		const vault = req.query.vault as string;
@@ -77,23 +75,6 @@ export const vaultControllers = {
 					nodes,
 					vaultId: vaultId,
 				});
-				resultVault?.nodes.length &&
-					(await Promise.all(
-						resultVault?.nodes?.map(async ({ id, content, name, mtime }) => {
-							const webmentions = await prisma.webmention.findMany({
-								where: {
-									nodeId: id,
-								},
-							});
-							await webmentionSend({
-								id,
-								content,
-								name,
-								mtime,
-								webmentions,
-							});
-						})
-					));
 
 				res.json({
 					message: `Vault ${vault} was successfully sync'd!`,

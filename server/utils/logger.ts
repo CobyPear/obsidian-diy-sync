@@ -13,7 +13,7 @@ export const logger = winston.createLogger({
 		}),
 		prettyPrint({
 			colorize: true,
-		})
+		}),
 	),
 	transports: [new winston.transports.Console()],
 });
@@ -26,5 +26,5 @@ export const morganMiddleware = morgan(
 				return logger.http(message);
 			},
 		},
-	}
+	},
 );

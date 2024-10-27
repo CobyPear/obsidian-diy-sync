@@ -1,14 +1,15 @@
->Why did you build this?
+> Why did you build this?
 
 I am still a relatively new developer and I wanted to cut my teeth on a backend focused project. I also love using Obsidan.md for my notes and while there are other (likely better) sync options out there, I wanted to create my own 'publish and sync' solution. I ended up with this Obsidian plugin + express server.
 
 > What does it do?
 
 There are two pieces of this project.
+
 1. A node.js server
 2. An Obsidian.md plugin
-Both are written in TypeScript and the projects live inside of the same monorepo.
-It is possible to run everything locally-- the plugin can be symlinked to an Obsidian vault and installed as a community plugin. From there you set your endpoint. Then, you may create a user and sync your vault to the server. 
+   Both are written in TypeScript and the projects live inside of the same monorepo.
+   It is possible to run everything locally-- the plugin can be symlinked to an Obsidian vault and installed as a community plugin. From there you set your endpoint. Then, you may create a user and sync your vault to the server.
 
 The server can have any number of users, and each user can have any number of vaults. Upper limits are likely bound to SQLite, Prisma, or Node/express constraints. For example, a vault with a lot of nodes will be too large to sync with the server. (I am looking into ways to make it possible to sync a vault of any size and I am open to suggestions!)
 

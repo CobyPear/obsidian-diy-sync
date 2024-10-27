@@ -42,7 +42,7 @@ export const blogControllers = {
 					const slug = title.replace(/\s/g, '-').toLowerCase();
 					const createdAt = new Date(Number(ctime)).toLocaleDateString('en-US');
 					const modifiedAt = new Date(Number(mtime)).toLocaleDateString(
-						'en-US'
+						'en-US',
 					);
 
 					content = content.replace('#published', '');
