@@ -1,24 +1,25 @@
 {
-    "name": "vitest-environment-obsync",
-    "version": "0.1.0",
-    "description": "Setup environment for prisma",
-    "exports": "./dist/vitest-environment-obsync.js",
-    "scripts": {
-        "build": "tsc"
-    },
-    "private": true,
-    "keywords": [],
-    "author": "CobyPear",
-    "license": "MIT",
-    "devDependencies": {
-        "@types/uuid": "^9.0.0",
-        "@typescript-eslint/eslint-plugin": "^5.32.0",
-        "@typescript-eslint/parser": "^5.32.0",
-        "eslint": "^8.20.0",
-        "prettier": "^2.7.1",
-        "vitest": "^0.25.3"
-    },
-    "dependencies": {
-        "uuid": "^9.0.0"
-    }
+	"name": "vitest-environment-obsync",
+	"version": "0.1.0",
+	"description": "Setup environment for prisma",
+	"exports": "./dist/vitest-environment-obsync.js",
+	"type": "module",
+	"scripts": {
+		"build": "tsc"
+	},
+	"private": true,
+	"keywords": [],
+	"author": "CobyPear",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/uuid": "^9.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.32.0",
+		"@typescript-eslint/parser": "^5.32.0",
+		"eslint": "^8.20.0",
+		"prettier": "^2.7.1",
+		"vitest": "^0.25.3"
+	},
+	"dependencies": {
+		"uuid": "^9.0.0"
+	}
 }
