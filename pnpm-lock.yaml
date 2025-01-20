@@ -94,6 +94,9 @@ importers:
       cors:
         specifier: ^2.8.5
         version: 2.8.5
+      dotenv:
+        specifier: ^16.0.1
+        version: 16.0.1
       express:
         specifier: ^4.18.1
         version: 4.18.1
@@ -140,9 +143,6 @@ importers:
       '@vitest/coverage-c8':
         specifier: ^0.25.7
         version: 0.25.7
-      dotenv:
-        specifier: ^16.0.1
-        version: 16.0.1
       eslint:
         specifier: ^8.20.0
         version: 8.20.0

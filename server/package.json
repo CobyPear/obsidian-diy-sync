@@ -3,6 +3,10 @@
 	"version": "0.1.0",
 	"description": "",
 	"main": "./build/server.js",
+	"files": [
+		"build",
+		"db/schema.prisma"
+	],
 	"scripts": {
 		"build:prod": "tsc",
 		"dev": "pnpm watch & NODE_ENV=development pnpm nodemon ./build/server.js",
@@ -18,6 +22,7 @@
 		"@prisma/client": "^4.9.0",
 		"bcrypt": "^5.0.1",
 		"cors": "^2.8.5",
+		"dotenv": "^16.0.1",
 		"express": "^4.18.1",
 		"jsonwebtoken": "^9.0.0",
 		"morgan": "^1.10.0",
@@ -35,7 +40,6 @@
 		"@typescript-eslint/eslint-plugin": "^5.31.0",
 		"@typescript-eslint/parser": "^5.31.0",
 		"@vitest/coverage-c8": "^0.25.7",
-		"dotenv": "^16.0.1",
 		"eslint": "^8.20.0",
 		"nodemon": "^2.0.19",
 		"prettier": "^2.7.1",
