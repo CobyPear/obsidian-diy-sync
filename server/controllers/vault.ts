@@ -1,7 +1,15 @@
 import type { Request, Response } from 'express';
-import type { Vault } from '@prisma/client';
-import { prisma } from '../db';
+import type { Vault } from '../types';
+import { db } from '../db';
 import { createOrUpdateNodes } from '../utils/createOrUpdateNodes';
+import { randomUUID } from 'node:crypto';
+
+const vaultStmnt = db.prepare<unknown[], Vault>(`
+SELECT Vault.*, Node.*
+  FROM Vault
+  LEFT JOIN Node ON Node.vaultId = Vault.id
+  WHERE Vault.name=@vault AND Vault.user=@username
+`);
 export const vaultControllers = {
 	get: async (req: Request, res: Response) => {
 		const vault = req.query.vault as string;
@@ -17,17 +25,19 @@ export const vaultControllers = {
 		}
 		try {
 			// get vault from DB
-			// send it!
-			const vaultsFromDB = await prisma.vault.findFirst({
-				where: { name: vault, user: req.user.username },
-				include: { nodes: true },
+			const nodesFromVault = vaultStmnt.all({
+				vault,
+				username: req.user.username,
 			});
-			if (!vaultsFromDB) {
+			if (!nodesFromVault) {
 				return res.status(404).json({
 					error: errorMessage,
 				});
 			}
-			return res.json(vaultsFromDB);
+			return res.json({
+				name: vault,
+				nodes: nodesFromVault,
+			});
 		} catch (error) {
 			console.error(error);
 			return res.status(500).json({
@@ -47,14 +57,9 @@ export const vaultControllers = {
 			if (!req.user) {
 				res.status(401).json({ message: 'Please login' });
 			} else if (nodes && vault) {
-				const foundVault = await prisma.vault.findFirst({
-					where: {
-						name: vault,
-						user: req.user.username,
-					},
-					include: {
-						nodes: true,
-					},
+				const foundVault = vaultStmnt.get({
+					vault,
+					username: req.user.username,
 				});
 
 				let vaultId: Vault['id'];
@@ -63,13 +68,16 @@ export const vaultControllers = {
 					console.log(`Found vault ${vault} Adding nodes...`);
 					vaultId = foundVault.id;
 				} else {
-					const newVault = await prisma.vault.create({
-						data: {
-							name: vault,
-							user: req.user.username,
-						},
+					const newVaultStmnt = db.prepare<unknown[], Vault>(`
+INSERT INTO Vault (id, name, user)
+  VALUES (@id, @name, @user);
+`);
+					vaultId = randomUUID();
+					newVaultStmnt.run({
+						id: vaultId,
+						name: vault,
+						user: req.user.username,
 					});
-					vaultId = newVault.id;
 				}
 				resultVault = await createOrUpdateNodes({
 					nodes,

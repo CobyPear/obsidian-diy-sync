@@ -1,6 +1,7 @@
-import { prisma } from '../db';
-import type { Node } from '@prisma/client';
 import type { Request, Response } from 'express';
+import type { Node } from '../types';
+import { db } from '../db';
+import { LOCALE } from '../utils/consts';
 
 export const blogControllers = {
 	get: async (req: Request, res: Response) => {
@@ -13,14 +14,14 @@ export const blogControllers = {
 		}
 
 		try {
-			const vaultFromDb = await prisma.vault.findFirst({
-				where: {
-					name: vault as string,
-				},
-				include: {
-					nodes: true,
-				},
-			});
+			const stmnt = db.prepare<unknown[], Node>(`
+Select Node.*
+  FROM Node
+  JOIN Vault ON Node.vaultId = Vault.id
+  WHERE Vault.name=@vault;
+`);
+			const vaultFromDb = stmnt.all({ vault: vault as string });
+			console.log(vaultFromDb);
 
 			if (!vaultFromDb) {
 				return res.status(404).json({
@@ -28,7 +29,7 @@ export const blogControllers = {
 				});
 			}
 
-			const publishedNodes = vaultFromDb?.nodes
+			const publishedNodes = vaultFromDb
 				.filter(({ content }: Node) => {
 					return (
 						content.includes('published: true') ||
@@ -40,10 +41,8 @@ export const blogControllers = {
 				.map(({ name, content, ctime, mtime }: Node) => {
 					const title = name.replace(/\.md$/g, '');
 					const slug = title.replace(/\s/g, '-').toLowerCase();
-					const createdAt = new Date(Number(ctime)).toLocaleDateString('en-US');
-					const modifiedAt = new Date(Number(mtime)).toLocaleDateString(
-						'en-US',
-					);
+					const createdAt = new Date(Number(ctime)).toLocaleDateString(LOCALE);
+					const modifiedAt = new Date(Number(mtime)).toLocaleDateString(LOCALE);
 
 					content = content.replace('#published', '');
 					return {

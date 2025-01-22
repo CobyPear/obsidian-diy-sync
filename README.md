@@ -13,8 +13,7 @@ This is a monorepo made with pnpm workspaces.
 
 - TypeScript
 - Express
-- Prisma
-- sqlite - this is the default. You may use any DB supported by Prisma
+- sqlite
 - obsidian-sample-plugin (used for the plugin template)
 - Docker/podman
 
@@ -47,7 +46,6 @@ This is a monorepo made with pnpm workspaces.
    ```
 
 1. Now in the monorepo, you can start the plugin in watch mode with `pnpm dev:plugin`
-1. prepare the database with `pnpm prisma-generate && pnpm prisma-db-push`
 1. Start the server in dev mode `pnpm dev:server`
 
 You will need to reload the plugin in Obsidian to see the changes in the plugin, but the code should be watching for changes in both the server and plugin.
@@ -89,15 +87,6 @@ I have made the server to be deployable to [render.com](https://render.com) whic
 Click the button below to get started!\*
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
-
-\*Currently after the first deploy you will need to SSH into the server either through their GUI or the given command and run the following commands:
-
-```shell
-pnpm prisma-generate && pnpm prisma-db-push
-```
-
-This will generate the prisma client and create the database.
-For some reason this is not possible on the first build. It might be possible to run these before the first start instead of build but I need to experiment more.
 
 ## Auth
 

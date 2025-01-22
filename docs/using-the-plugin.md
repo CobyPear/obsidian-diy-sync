@@ -25,14 +25,11 @@ You may run the server locally until you feel comfortable hosting.
 
 - TypeScript
 - Express.js
-- Prisma ORM
 - SQLite (default)
 
 In order to use a different database, you will need to edit the schemas in the
 `server/db` directory. You will also need to configure hosting for the database
 or containerize the application.
-
-See [Prisma's documentation](https://prisma.io/docs) for more information on Database Connectors.
 
 ## Using The Plugin
 

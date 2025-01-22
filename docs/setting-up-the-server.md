@@ -10,4 +10,3 @@ The server is an express.js server written in TypeScript. By default, it uses SQ
 
 - The server host will need nodejs version 16 LTS or greater.
 - The server will also need a persistent disk for the SQLite database, or some other database solution.
-- The prisma client and database will need to be initialized during/after the initial build before the server starts.

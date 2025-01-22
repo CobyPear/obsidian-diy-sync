@@ -8,5 +8,6 @@ in
       pkgs.nodejs_22
       pkgs.openssl
       unstable.pnpm
+      pkgs.sqlite
     ];
 }

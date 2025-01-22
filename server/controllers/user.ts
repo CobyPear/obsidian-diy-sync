@@ -1,9 +1,10 @@
 import type { Request, Response } from 'express';
-import { prisma } from '../db/index';
+import type { User } from '../types';
+import { db } from '../db/index';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils/generateToken';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { clearCookies } from '../utils/clearCookies';
+import { randomUUID } from 'node:crypto';
 
 const saltRounds = 10;
 // TODO: need a way to create a user from an API route (or do i?)
@@ -21,22 +22,33 @@ export const userControllers = {
 		try {
 			const hashedPw = await bcrypt.hash(plaintextPw, saltRounds);
 			// create new user
-			const newUser = await prisma.user.create({
-				data: {
-					username,
-					password: hashedPw,
-				},
+			const newUserStmnt = db.prepare<unknown[], User>(`
+INSERT INTO User (id, username, password)
+  VALUES (@id, @username, @password);
+`);
+			const userId = randomUUID();
+			newUserStmnt.run({
+				id: userId,
+				username,
+				password: hashedPw,
 			});
 
+			// const newUser = await prisma.user.create({
+			// 	data: {
+			// 		username,
+			// 		password: hashedPw,
+			// 	},
+			// });
+
 			const accessToken = await generateToken(
-				newUser.id,
-				newUser.username,
+				userId,
+				username,
 				'15m',
 				'access',
 			);
 			const refreshToken = await generateToken(
-				newUser.id,
-				newUser.username,
+				userId,
+				username,
 				'7d',
 				'refresh',
 			);
@@ -57,19 +69,20 @@ export const userControllers = {
 				// send response to user
 				res.json({
 					message: 'User created!',
-					username: newUser.username,
+					username: username,
 				});
 			}
 		} catch (error) {
-			if ((error as PrismaClientKnownRequestError).code) {
+			if (error) {
+				console.error(error);
 				res.status(400).json({
 					message: 'Could not create user. Is the username already in use?',
-					prismaError: error,
+					error: error,
 				});
 			} else {
 				console.error(error);
 				// if error, send error
-				res.status(500).json({ prismaError: error });
+				res.status(500).json({ error: error });
 			}
 		}
 	},
@@ -83,11 +96,18 @@ export const userControllers = {
 		try {
 			const username = req.user.username;
 
-			const deleted = await prisma.user.delete({
-				where: {
-					username,
-				},
+			const deletedUserStmnt = db.prepare<unknown[], User>(`
+DELETE FROM user
+  WHERE username=@username
+`);
+			const deleted = deletedUserStmnt.get({
+				username,
 			});
+			// const deleted = await prisma.user.delete({
+			// 	where: {
+			// 		username,
+			// 	},
+			// });
 			if (deleted) {
 				clearCookies(res);
 				delete req.user;

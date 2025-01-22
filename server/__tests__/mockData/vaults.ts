@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client';
+import type { Vault } from '../../types';
 
-export const vaults: Prisma.VaultCreateInput[] = [
+export const vaults: Partial<Vault>[] = [
 	{
 		name: 'TestingVault',
 	},

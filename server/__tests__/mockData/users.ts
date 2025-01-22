@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client';
+import type { User } from '../../types';
 
-export const users: Prisma.UserCreateInput[] = [
+export const users: Partial<User>[] = [
 	{
 		username: 'Smokey Muffins',
 		password: 'aj3^fkO3U#jw@#%FFle#@',

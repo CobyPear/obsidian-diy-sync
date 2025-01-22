@@ -8,12 +8,10 @@
 		"dev:server": "pnpm -F './server' dev",
 		"dev:plugin": "pnpm -F './plugin' dev",
 		"build:configs": "pnpm -F './configs/**' build",
-		"build:server": "pnpm prisma-generate && pnpm -F './server' build:prod",
+		"build:server": "pnpm -F './server' build:prod",
 		"start:server": "pnpm -F './server' start:prod",
 		"test:server": "pnpm -F './server' test",
-		"server:test:watch": "pnpm -F './server' test:watch",
-		"prisma-generate": "pnpm prisma generate --schema=./server/db/schema.prisma",
-		"prisma-db-push": "pnpm prisma db push --schema=./server/db/schema.prisma --skip-generate"
+		"server:test:watch": "pnpm -F './server' test:watch"
 	},
 	"keywords": [],
 	"author": "CobyPear",
@@ -25,18 +23,19 @@
 		"eslint": "^8.33.0",
 		"prettier": "^2.8.3"
 	},
-	"dependencies": {
-		"prisma": "^4.9.0"
-	},
 	"pnpm": {
 		"overrides": {
 			"vitest-environment-obsync": "workspace:*"
-		}
+		},
+		"onlyBuiltDependencies": [
+			"bcrypt",
+			"nodemon",
+			"sqlite3",
+			"better-sqlite3",
+			"esbuild"
+		]
 	},
 	"engines": {
 		"node": ">=18 <=22"
-	},
-	"prisma": {
-		"schema": "./server/db/schema.prisma"
 	}
 }

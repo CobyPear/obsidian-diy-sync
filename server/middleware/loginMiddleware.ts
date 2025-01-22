@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
+import type { User } from '../types';
 import bcrypt from 'bcrypt';
-import { prisma } from '../db';
+import { db } from '../db';
 import { generateToken } from '../utils/generateToken';
 
 export const loginMiddleware = async (
@@ -9,10 +10,16 @@ export const loginMiddleware = async (
 	next: NextFunction,
 ) => {
 	const { username, password: plaintextPw } = req.body;
-	const user = await prisma.user.findUnique({
-		where: {
-			username,
-		},
+	const stmnt = db.prepare<unknown[], User>(
+		`
+SELECT id, username, password
+		FROM User
+		WHERE username = @username;
+`,
+	);
+
+	const user = stmnt.get({
+		username,
 	});
 
 	if (!user) {
