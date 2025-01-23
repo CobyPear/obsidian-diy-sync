@@ -26,7 +26,9 @@ export const writeNodeToFile = async (
 			.split('/')
 			.filter((dir) => !dir.endsWith('.md') && dir !== '');
 
-		dirs.length && (await vault.adapter.mkdir(path.join(vaultPath, ...dirs)));
+		if (dirs.length > 0) {
+			await vault.adapter.mkdir(path.join(vaultPath, ...dirs));
+		}
 		try {
 			const file = await vault.create(path.join(vaultPath, node.path), '', {
 				ctime: Number(node.ctime),
@@ -42,7 +44,6 @@ export const writeNodeToFile = async (
 				console.log(`Wrote file ${node.name} at ${node.path}`);
 			}
 			// Swallow the error?
-			// eslint-disable-next-line no-empty
 		} catch (error) {
 			console.error(error);
 		}

@@ -1,13 +1,14 @@
 import path from 'path';
 import fs from 'fs';
 import { v4 as uuid } from 'uuid';
-import type { Environment, EnvironmentOptions } from 'vitest';
+import type { Environment } from 'vitest/environments';
 
 const __dirname = process.cwd();
 
 export default <Environment>{
+	transformMode: 'ssr',
 	name: 'obsync',
-	async setup(global, options: EnvironmentOptions) {
+	setup(global) {
 		const dbName = `test_db_${uuid()}.db`;
 		const dbPath = path.join(__dirname, dbName);
 		const DATABASE_URL = `file:../${dbName}`;
