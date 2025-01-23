@@ -30,6 +30,8 @@
 		"winston": "^3.17.0"
 	},
 	"devDependencies": {
+		"@eslint/eslintrc": "^3.2.0",
+		"@eslint/js": "^9.18.0",
 		"@types/bcrypt": "^5.0.2",
 		"@types/better-sqlite3": "^7.6.12",
 		"@types/cors": "^2.8.17",
@@ -40,6 +42,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.21.0",
 		"@typescript-eslint/parser": "^8.21.0",
 		"eslint": "^9.18.0",
+		"globals": "^15.14.0",
 		"nodemon": "^3.1.9",
 		"prettier": "^3.4.2",
 		"supertest": "^7.0.0",

@@ -17,10 +17,13 @@
 	"author": "CobyPear",
 	"license": "MIT",
 	"devDependencies": {
+		"@eslint/eslintrc": "^3.2.0",
+		"@eslint/js": "^9.18.0",
 		"@types/node": "^22.10.8",
 		"@typescript-eslint/eslint-plugin": "^8.21.0",
 		"@typescript-eslint/parser": "^8.21.0",
 		"eslint": "^9.18.0",
+		"globals": "^15.14.0",
 		"prettier": "^3.4.2"
 	},
 	"pnpm": {

@@ -11,6 +11,12 @@ importers:
 
   .:
     devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.2.0
+      '@eslint/js':
+        specifier: ^9.18.0
+        version: 9.18.0
       '@types/node':
         specifier: ^22.10.8
         version: 22.10.8
@@ -23,6 +29,9 @@ importers:
       eslint:
         specifier: ^9.18.0
         version: 9.18.0
+      globals:
+        specifier: ^15.14.0
+        version: 15.14.0
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -54,6 +63,12 @@ importers:
 
   plugin:
     devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.2.0
+      '@eslint/js':
+        specifier: ^9.18.0
+        version: 9.18.0
       '@types/node':
         specifier: ^22.10.8
         version: 22.10.8
@@ -69,6 +84,9 @@ importers:
       esbuild:
         specifier: 0.24.2
         version: 0.24.2
+      globals:
+        specifier: ^15.14.0
+        version: 15.14.0
       obsidian:
         specifier: latest
         version: 1.7.2(@codemirror/state@6.1.0)(@codemirror/view@6.1.2)
@@ -109,6 +127,12 @@ importers:
         specifier: ^3.17.0
         version: 3.17.0
     devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.2.0
+      '@eslint/js':
+        specifier: ^9.18.0
+        version: 9.18.0
       '@types/bcrypt':
         specifier: ^5.0.2
         version: 5.0.2
@@ -139,6 +163,9 @@ importers:
       eslint:
         specifier: ^9.18.0
         version: 9.18.0
+      globals:
+        specifier: ^15.14.0
+        version: 15.14.0
       nodemon:
         specifier: ^3.1.9
         version: 3.1.9
@@ -1188,6 +1215,10 @@ packages:
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
+    engines: {node: '>=18'}
+
+  globals@15.14.0:
+    resolution: {integrity: sha512-OkToC372DtlQeje9/zHIo5CT8lRP/FUgEOKBEhU4e0abL7J7CD24fD9ohiLN5hagG/kWCYj4K5oaxxtj2Z0Dig==}
     engines: {node: '>=18'}
 
   gopd@1.2.0:
@@ -3114,6 +3145,8 @@ snapshots:
       path-is-absolute: 1.0.1
 
   globals@14.0.0: {}
+
+  globals@15.14.0: {}
 
   gopd@1.2.0: {}
 
