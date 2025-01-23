@@ -27,7 +27,7 @@ interface Node {
 }
 
 interface ReqUser extends JwtPayload {
-	userId: (typeof User)['id'];
+	userId: User['id'];
 	username: string;
 }
 declare global {

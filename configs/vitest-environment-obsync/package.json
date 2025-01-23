@@ -1,7 +1,7 @@
 {
 	"name": "vitest-environment-obsync",
 	"version": "0.1.0",
-	"description": "Setup environment for prisma",
+	"description": "Setup environment for sqlite",
 	"exports": "./dist/vitest-environment-obsync.js",
 	"type": "module",
 	"scripts": {
@@ -12,14 +12,14 @@
 	"author": "CobyPear",
 	"license": "MIT",
 	"devDependencies": {
-		"@types/uuid": "^9.0.0",
-		"@typescript-eslint/eslint-plugin": "^5.32.0",
-		"@typescript-eslint/parser": "^5.32.0",
-		"eslint": "^8.20.0",
-		"prettier": "^2.7.1",
-		"vitest": "^0.25.3"
+		"@types/uuid": "^10.0.0",
+		"@typescript-eslint/eslint-plugin": "^8.21.0",
+		"@typescript-eslint/parser": "^8.21.0",
+		"eslint": "^9.18.0",
+		"prettier": "^3.4.2",
+		"vitest": "^3.0.3"
 	},
 	"dependencies": {
-		"uuid": "^9.0.0"
+		"uuid": "^11.0.5"
 	}
 }

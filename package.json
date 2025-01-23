@@ -17,11 +17,11 @@
 	"author": "CobyPear",
 	"license": "MIT",
 	"devDependencies": {
-		"@types/node": "^16.11.6",
-		"@typescript-eslint/eslint-plugin": "^5.50.0",
-		"@typescript-eslint/parser": "^5.50.0",
-		"eslint": "^8.33.0",
-		"prettier": "^2.8.3"
+		"@types/node": "^22.10.8",
+		"@typescript-eslint/eslint-plugin": "^8.21.0",
+		"@typescript-eslint/parser": "^8.21.0",
+		"eslint": "^9.18.0",
+		"prettier": "^3.4.2"
 	},
 	"pnpm": {
 		"overrides": {
