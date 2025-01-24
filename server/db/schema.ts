@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS "Node" (
     "mtime" TEXT NOT NULL,
     CONSTRAINT "Node_vaultId_fkey" FOREIGN KEY ("vaultId") REFERENCES "Vault" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY("id", "vaultId")
-
 );
 		`;
 	}
@@ -44,5 +43,9 @@ CREATE TABLE IF NOT EXISTS "Node" (
 
 	vaultNodeIndex() {
 		return `CREATE UNIQUE INDEX IF NOT EXISTS "Node_id_vault_key" ON "Node"("id", "vaultId");`;
+	}
+
+	journalMode() {
+		return `PRAGMA journal_mode=WAL;`;
 	}
 }

@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const DB_URL = process.env.DATABASE_URL;
-console.log('DB_URL', DB_URL);
 if (!DB_URL) {
 	throw new Error('DATABASE_URL not set.');
 }
@@ -12,6 +11,8 @@ if (!DB_URL) {
 export const db = new Database(DB_URL);
 
 const schema = new Schema();
+
+db.prepare(schema.journalMode()).run();
 
 const prepareTables = db.transaction(() => {
 	db.prepare(schema.userTable()).run();
