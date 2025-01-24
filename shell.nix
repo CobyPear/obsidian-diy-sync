@@ -9,5 +9,6 @@ in
       pkgs.openssl
       unstable.pnpm
       pkgs.sqlite
+      pkgs.sqlitebrowser
     ];
 }

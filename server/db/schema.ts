@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS "Vault" (
 	nodeTable() {
 		return `
 CREATE TABLE IF NOT EXISTS "Node" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "vaultId" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "extension" TEXT NOT NULL,
@@ -32,7 +32,9 @@ CREATE TABLE IF NOT EXISTS "Node" (
     "path" TEXT NOT NULL,
     "ctime" TEXT NOT NULL,
     "mtime" TEXT NOT NULL,
-    CONSTRAINT "Node_vaultId_fkey" FOREIGN KEY ("vaultId") REFERENCES "Vault" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "Node_vaultId_fkey" FOREIGN KEY ("vaultId") REFERENCES "Vault" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY("id", "vaultId")
+
 );
 		`;
 	}
@@ -40,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "Node" (
 		return `CREATE UNIQUE INDEX IF NOT EXISTS "User_username_key" ON "User"("username");`;
 	}
 
-	pathIndex() {
-		return `CREATE UNIQUE INDEX IF NOT EXISTS "Node_path_key" ON "Node"("path");`;
+	vaultNodeIndex() {
+		return `CREATE UNIQUE INDEX IF NOT EXISTS "Node_id_vault_key" ON "Node"("id", "vaultId");`;
 	}
 }

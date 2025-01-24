@@ -13,10 +13,11 @@ export const userControllers = {
 	post: async (req: Request, res: Response) => {
 		const { username, password: plaintextPw, secret } = req.body;
 		if (process.env.CLIENT_SECRET !== secret) {
-			return res.status(403).json({
+			res.status(403).json({
 				message:
 					'Invalid client secret. If you are a valid user of the server, ask the owner for the client secret',
 			});
+			return;
 		}
 		// salt and hash pw
 		try {
@@ -89,9 +90,10 @@ INSERT INTO User (id, username, password)
 	delete: async (req: Request, res: Response) => {
 		console.log(req.user);
 		if (!req.user) {
-			return res.status(401).json({
+			res.status(401).json({
 				message: 'Please log in to the user account that needs to be deleted',
 			});
+			return;
 		}
 		try {
 			const username = req.user.username;
@@ -112,17 +114,20 @@ DELETE FROM user
 				clearCookies(res);
 				delete req.user;
 
-				return res.status(200).json({
+				res.status(200).json({
 					message: `${username} and associated vault(s) deleted successfully`,
 				});
+				return;
 			} else {
-				return res
+				res
 					.status(404)
 					.json({ message: 'No user was deleted. Does the user exist?' });
+				return;
 			}
 		} catch (error) {
 			console.error(error);
-			return res.status(500).json();
+			res.status(500).json();
+			return;
 		}
 	},
 };

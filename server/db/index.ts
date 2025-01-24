@@ -18,7 +18,7 @@ const prepareTables = db.transaction(() => {
 	db.prepare(schema.vaultTable()).run();
 	db.prepare(schema.nodeTable()).run();
 	db.prepare(schema.usernameIndex()).run();
-	db.prepare(schema.pathIndex()).run();
+	db.prepare(schema.vaultNodeIndex()).run();
 });
 
 prepareTables();

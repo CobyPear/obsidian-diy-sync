@@ -23,4 +23,5 @@ CREATE TABLE IF NOT EXISTS "Node" (
     CONSTRAINT "Node_vaultId_fkey" FOREIGN KEY ("vaultId") REFERENCES "Vault" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-CREATE UNIQUE INDEX "Node_path_key" ON "Node"("path");
+CREATE UNIQUE INDEX "Node_id_vault_key" ON "Node"("id", "vaultId");
+-- CREATE UNIQUE INDEX "Vault_id_key" ON "Vault"("vault");

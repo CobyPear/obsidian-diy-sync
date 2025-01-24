@@ -14,9 +14,10 @@ export const refreshControllers = {
 		);
 
 		if (!matches) {
-			return res
+			res
 				.status(401)
 				.json({ message: 'Session expired. Please log in again.' });
+			return;
 		}
 
 		if (matches && matches.groups) {
@@ -72,12 +73,14 @@ SELECT id, username, refreshToken
 							httpOnly: true,
 						});
 
-						return res.json({ message: 'Tokens Refreshed' });
+						res.json({ message: 'Tokens Refreshed' });
+						return;
 					}
 				}
 			} catch (error) {
 				console.log(error);
-				return res.status(500).json();
+				res.status(500).json();
+				return;
 			}
 		}
 	},

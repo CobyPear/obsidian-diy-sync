@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express';
-import type { Vault } from '../types';
+import type { Vault, Node } from '../types';
 import { db } from '../db';
 import { createOrUpdateNodes } from '../utils/createOrUpdateNodes';
 import { randomUUID } from 'node:crypto';
 
-const vaultStmnt = db.prepare<unknown[], Vault>(`
-SELECT Vault.*, Node.*
+const vaultStmnt = db.prepare<unknown[], Vault & Node & { vault_id: string }>(`
+SELECT Vault.id as vault_id, Node.*
   FROM Vault
   LEFT JOIN Node ON Node.vaultId = Vault.id
   WHERE Vault.name=@vault AND Vault.user=@username
@@ -15,13 +15,15 @@ export const vaultControllers = {
 		const vault = req.query.vault as string;
 		const errorMessage = `No vault ${vault} to send. Check the vault name and make sure you've sync'd at least once.`;
 		if (!vault) {
-			return res.status(400).json({
+			res.status(400).json({
 				error:
 					'No vault was sent in the request. Make sure the Vault is set in the plugin options',
 			});
+			return;
 		}
 		if (!req.user) {
-			return res.status(401).json({ message: 'Please login' });
+			res.status(401).json({ message: 'Please login' });
+			return;
 		}
 		try {
 			// get vault from DB
@@ -30,19 +32,22 @@ export const vaultControllers = {
 				username: req.user.username,
 			});
 			if (!nodesFromVault) {
-				return res.status(404).json({
+				res.status(404).json({
 					error: errorMessage,
 				});
+				return;
 			}
-			return res.json({
+			res.json({
 				name: vault,
 				nodes: nodesFromVault,
 			});
+			return;
 		} catch (error) {
 			console.error(error);
-			return res.status(500).json({
+			res.status(500).json({
 				error: errorMessage,
 			});
+			return;
 		}
 	},
 	put: async (req: Request, res: Response) => {
@@ -57,16 +62,18 @@ export const vaultControllers = {
 			if (!req.user) {
 				res.status(401).json({ message: 'Please login' });
 			} else if (nodes && vault) {
-				const foundVault = vaultStmnt.get({
+				const foundVault = vaultStmnt.all({
 					vault,
 					username: req.user.username,
 				});
 
 				let vaultId: Vault['id'];
 
-				if (foundVault) {
+				if (foundVault.length > 0) {
+					console.debug(foundVault.length, foundVault[0]);
 					console.log(`Found vault ${vault} Adding nodes...`);
-					vaultId = foundVault.id;
+					vaultId = foundVault[0].vault_id;
+					console.debug('vault ID from found vault: ', foundVault[0]?.vaultId);
 				} else {
 					const newVaultStmnt = db.prepare<unknown[], Vault>(`
 INSERT INTO Vault (id, name, user)
@@ -81,7 +88,7 @@ INSERT INTO Vault (id, name, user)
 				}
 				resultVault = await createOrUpdateNodes({
 					nodes,
-					vaultId: vaultId,
+					vaultId,
 				});
 
 				res.json({
@@ -91,10 +98,11 @@ INSERT INTO Vault (id, name, user)
 			}
 		} catch (error) {
 			console.error(error);
-			return res.status(500).json({
+			res.status(500).json({
 				message: 'Something went wrong',
 				error: error,
 			});
+			return;
 		}
 	},
 };

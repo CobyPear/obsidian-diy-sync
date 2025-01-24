@@ -7,10 +7,11 @@ export const blogControllers = {
 	get: async (req: Request, res: Response) => {
 		const { vault } = req.query;
 		if (!vault) {
-			return res.status(400).json({
+			res.status(400).json({
 				message:
 					'No vault name provided.\nThe vault name should be available as a query string parameter vault=vaultName ',
 			});
+			return;
 		}
 
 		try {
@@ -24,9 +25,10 @@ Select Node.*
 			console.log(vaultFromDb);
 
 			if (!vaultFromDb) {
-				return res.status(404).json({
+				res.status(404).json({
 					message: `Vault named ${vault} was not found in the DB. Please make sure the vault exists in the database`,
 				});
+				return;
 			}
 
 			const publishedNodes = vaultFromDb
@@ -55,21 +57,23 @@ Select Node.*
 				});
 
 			if (!publishedNodes) {
-				return res.status(404).json({
+				res.status(404).json({
 					message: `Vault ${vault} has not published nodes. Please publish a node and try again.`,
 				});
+				return;
 			}
 
 			res.status(200).json(publishedNodes);
 		} catch (error) {
 			console.error(error);
-			return res.status(500).json({
+			res.status(500).json({
 				message:
 					error instanceof Error
 						? error.message
 						: 'Something went wrong on the server',
 				error: error,
 			});
+			return;
 		}
 	},
 };

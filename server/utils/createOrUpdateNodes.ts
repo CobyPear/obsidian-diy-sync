@@ -11,31 +11,55 @@ export const createOrUpdateNodes = async ({
 }) => {
 	for (const { content, name, extension, path, ctime, mtime } of nodes) {
 		try {
-			const upsertStmnt = db.prepare(
-				`
+			const nodeStmnt = db.prepare<unknown[], Node>(
+				`SELECT id, vaultId, content
+						FROM Node
+						WHERE Node.vaultId=@vaultId AND Node.path=@path`,
+			);
+			const node = nodeStmnt.get({ vaultId, path });
+			console.log(node);
+			if (node?.content && node.id) {
+				console.debug('Found node... Updating!', node);
+
+				const updateStmnt = db.prepare(
+					`UPDATE Node
+						SET
+							path=@path,
+							content=@content,
+							name=@name,
+							extension=@extension,
+							ctime=@ctime,
+							mtime=@mtime
+						WHERE id=@id AND vaultId=@vaultId`,
+				);
+				updateStmnt.run({
+					id: node.id,
+					vaultId,
+					path,
+					content,
+					name,
+					extension,
+					ctime,
+					mtime,
+				});
+			} else {
+				const upsertStmnt = db.prepare(
+					`
 INSERT INTO Node (id, path, content, name, extension, ctime, mtime, vaultId)
   VALUES (@id, @path, @content, @name, @extension, @ctime, @mtime, @vaultId)
-  ON CONFLICT(path)
-  DO UPDATE SET
-    content = excluded.content,
-    name = excluded.name,
-    path = excluded.path,
-    extension = excluded.extension,
-    ctime = excluded.ctime,
-    mtime = excluded.mtime,
-    vaultId = excluded.vaultId;
 `,
-			);
-			upsertStmnt.run({
-				id: randomUUID(),
-				path,
-				content,
-				name,
-				extension,
-				ctime,
-				mtime,
-				vaultId,
-			});
+				);
+				upsertStmnt.run({
+					id: randomUUID(),
+					path,
+					content,
+					name,
+					extension,
+					ctime,
+					mtime,
+					vaultId,
+				});
+			}
 		} catch (error) {
 			console.error(error);
 			return;
@@ -54,12 +78,4 @@ SELECT v.id, v.name, v.user, v.createdAt, n.id AS node_id, n.name AS node_name
 		id: vaultId,
 	});
 	return vault;
-	// return await prisma.vault.findUnique({
-	// 	where: {
-	// 		id: vaultId,
-	// 	},
-	// 	include: {
-	// 		nodes: true,
-	// 	},
-	// });
 };

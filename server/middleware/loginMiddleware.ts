@@ -23,19 +23,21 @@ SELECT id, username, password
 	});
 
 	if (!user) {
-		return res.status(401).json({
+		res.status(401).json({
 			message: `Username ${username} was not found in the database\nIf you are sure the user exists, check the username and try again.`,
 		});
+		return;
 	}
 
 	const passwordsMatch =
 		user && (await bcrypt.compare(plaintextPw, user.password));
 
 	if (!passwordsMatch) {
-		return res.status(401).json({
+		res.status(401).json({
 			message:
 				'Password received does not match stored value. Please check your password and try again.',
 		});
+		return;
 	}
 
 	if (user && user.id && passwordsMatch) {

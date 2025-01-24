@@ -12,7 +12,6 @@ interface Vault {
 	createdAt: Date;
 	name: User['username'];
 	user: string;
-	nodes: Node[];
 }
 
 interface Node {
