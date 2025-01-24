@@ -10,7 +10,7 @@
 		"build:configs": "pnpm -F './configs/**' build",
 		"build:server": "pnpm -F './server' build:prod",
 		"start:server": "pnpm -F './server' start:prod",
-		"test:server": "pnpm -F './server' test",
+		"test:server": "pnpm build:configs && pnpm -F './server' test",
 		"server:test:watch": "pnpm -F './server' test:watch"
 	},
 	"keywords": [],
@@ -40,5 +40,6 @@
 	},
 	"engines": {
 		"node": ">=18 <=22"
-	}
+	},
+	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }
