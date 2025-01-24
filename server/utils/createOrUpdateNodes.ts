@@ -17,10 +17,8 @@ export const createOrUpdateNodes = async ({
 						WHERE Node.vaultId=@vaultId AND Node.path=@path`,
 			);
 			const node = nodeStmnt.get({ vaultId, path });
-			console.log(node);
 			if (node?.content && node.id) {
-				console.debug('Found node... Updating!', node);
-
+				console.debug(`Found node ${path}... Updating!`);
 				const updateStmnt = db.prepare(
 					`UPDATE Node
 						SET

@@ -43,6 +43,7 @@ Select Node.*
 				.map(({ name, content, ctime, mtime }: Node) => {
 					const title = name.replace(/\.md$/g, '');
 					const slug = title.replace(/\s/g, '-').toLowerCase();
+					console.debug('LOCALE: ', LOCALE);
 					const createdAt = new Date(Number(ctime)).toLocaleDateString(LOCALE);
 					const modifiedAt = new Date(Number(mtime)).toLocaleDateString(LOCALE);
 

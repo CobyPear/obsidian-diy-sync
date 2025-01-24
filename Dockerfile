@@ -6,6 +6,10 @@ COPY . /app
 WORKDIR /app
 
 
+FROM base AS dev
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+CMD ["pnpm", "dev:server"]
+
 FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm -F obsidian-sync-server build:prod
@@ -23,7 +27,7 @@ RUN apk update && apk add --no-cache dumb-init
 RUN pnpm install -g pm2
 ENV NODE_ENV=production
 ENV PORT=8000
-ENV DATABASE_URL="file://./sqlite.db"
+ENV DATABASE_URL=$DATABASE_URL
 COPY --from=pruned --chown=node:node /app/pruned /app
 EXPOSE 8000
 

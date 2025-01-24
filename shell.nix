@@ -9,6 +9,7 @@ in
       pkgs.openssl
       unstable.pnpm
       pkgs.sqlite
+      pkgs.podman-compose
       pkgs.sqlitebrowser
     ];
 }

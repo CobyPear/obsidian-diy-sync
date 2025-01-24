@@ -70,10 +70,8 @@ export const vaultControllers = {
 				let vaultId: Vault['id'];
 
 				if (foundVault.length > 0) {
-					console.debug(foundVault.length, foundVault[0]);
 					console.log(`Found vault ${vault} Adding nodes...`);
 					vaultId = foundVault[0].vault_id;
-					console.debug('vault ID from found vault: ', foundVault[0]?.vaultId);
 				} else {
 					const newVaultStmnt = db.prepare<unknown[], Vault>(`
 INSERT INTO Vault (id, name, user)

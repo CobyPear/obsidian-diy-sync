@@ -44,8 +44,4 @@ CREATE TABLE IF NOT EXISTS "Node" (
 	vaultNodeIndex() {
 		return `CREATE UNIQUE INDEX IF NOT EXISTS "Node_id_vault_key" ON "Node"("id", "vaultId");`;
 	}
-
-	journalMode() {
-		return `PRAGMA journal_mode=WAL;`;
-	}
 }
