@@ -78,6 +78,10 @@ and to run it, use the `.env` file created earlier. Note: you may want to mount 
 podman run -p 8000:8000 -d --name obsidian-server --env-file=.env obsidian-server:latest
 ```
 
+#### docker-compose
+
+The docker-compose.yaml file is intended for use when developing. You can easily modify it for production if you'd like
+
 ### The Blog Route
 
 There is also a route at `/api/blog` that is not blocked by cors by default. Given a query string parameter of a vault name, you can fetch all nodes that have frontmatter `published: true` or a #published hashtag. (The #published hashtag is removed from the response.)
@@ -108,4 +112,3 @@ I would like to implement a OTP feature which takes in an email or phone number 
 - Add routes to the server to be able to grab single nodes, or nodes by tag
 - "magic link" or OTP login
 - Media storage
-- Add support for other DBs
