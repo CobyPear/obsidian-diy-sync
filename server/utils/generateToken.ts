@@ -1,4 +1,3 @@
-import { db } from '../db/index';
 import jwt from 'jsonwebtoken';
 import type { ReqUser } from '../types';
 import { orm } from '../db/orm';
