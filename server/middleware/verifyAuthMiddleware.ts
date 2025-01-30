@@ -10,7 +10,10 @@ export const verifyAuthMiddleware = async (
 	try {
 		// get the cookie header
 		const cookie = req.get('cookie');
-		if (!cookie) return res.status(401).json({ message: 'Not Authorized' });
+		if (!cookie) {
+			res.status(401).json({ message: 'Not Authorized' });
+			return;
+		}
 		// grab the access token from the header
 		const matches = /^access_token=(?<accessToken>[\w\D]+);/g.exec(
 			cookie as string,
@@ -18,8 +21,10 @@ export const verifyAuthMiddleware = async (
 		if (matches && matches.groups) {
 			const accessToken = matches.groups.accessToken;
 
-			if (!accessToken)
-				return res.status(401).json({ message: 'Not Authorized' });
+			if (!accessToken) {
+				res.status(401).json({ message: 'Not Authorized' });
+				return;
+			}
 
 			const user = jwt.verify(
 				accessToken,
@@ -28,7 +33,8 @@ export const verifyAuthMiddleware = async (
 			if (user) {
 				req.user = user;
 			} else {
-				return res.status(401).json({ message: 'Not Authorized' });
+				res.status(401).json({ message: 'Not Authorized' });
+				return;
 			}
 			next();
 		} else {
@@ -37,11 +43,13 @@ export const verifyAuthMiddleware = async (
 			// and call next() here instead? Then we could send 401 only if
 			// the refresh token is expired
 			res.status(401).json({ message: 'Not Authorized' });
+			return;
 		}
 	} catch (error) {
 		console.error(error);
-		return res.status(500).json({
+		res.status(500).json({
 			error: error,
 		});
+		return;
 	}
 };

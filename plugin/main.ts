@@ -86,7 +86,6 @@ export default class NodeSyncPlugin extends Plugin {
 					}
 
 					if (res.ok) {
-						const data = await res.json();
 						new MessageModal(
 							this.app,
 							`Successfully sync'd ${this.app.vault.getName()} to ${

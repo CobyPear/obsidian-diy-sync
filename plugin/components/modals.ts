@@ -63,7 +63,7 @@ export class LoginModal extends Modal {
 	onOpen() {
 		const title =
 			this.modalType === 'user' ? 'Create a User' : `Login to ${this.url}`;
-		const { contentEl, containerEl } = this;
+		const { contentEl } = this;
 		contentEl.addClass('login-modal');
 		contentEl.createEl('h1', { text: title });
 		// Username input control
@@ -81,70 +81,73 @@ export class LoginModal extends Modal {
 			});
 		});
 
-		this.modalType === 'user' &&
-			new Setting(contentEl).setName('Confirm Password').addText((text) => {
-				return text.onChange((value) => {
-					this.confirmPass = value;
+		switch (this.modalType) {
+			case 'user': {
+				new Setting(contentEl).setName('Confirm Password').addText((text) => {
+					return text.onChange((value) => {
+						this.confirmPass = value;
+					});
 				});
-			});
 
-		// Create user button
-		this.modalType === 'user' &&
-			new Setting(contentEl).addButton((btn) =>
-				btn
-					.setButtonText('Create User')
-					.setCta()
-					.onClick(() => {
-						// Show an error to the user that credentials are missing
-						if (this.password !== this.confirmPass) {
-							if (!this.isWarningShown) {
-								const warning = contentEl.createEl('span', {
-									text: 'Passwords do not match. Please confirm passwords match and try again.',
-									cls: ['warning', 'fade-out'],
-								});
-								this.isWarningShown = true;
+				new Setting(contentEl).addButton((btn) =>
+					btn
+						.setButtonText('Create User')
+						.setCta()
+						.onClick(() => {
+							// Show an error to the user that credentials are missing
+							if (this.password !== this.confirmPass) {
+								if (!this.isWarningShown) {
+									const warning = contentEl.createEl('span', {
+										text: 'Passwords do not match. Please confirm passwords match and try again.',
+										cls: ['warning', 'fade-out'],
+									});
+									this.isWarningShown = true;
 
-								setTimeout(() => {
-									this.contentEl.removeChild(warning);
-									this.isWarningShown = false;
-								}, 5000);
+									setTimeout(() => {
+										this.contentEl.removeChild(warning);
+										this.isWarningShown = false;
+									}, 5000);
+								}
+							} else {
+								this.onSubmit(this.username, this.password);
+								this.close();
 							}
-						} else {
-							this.onSubmit(this.username, this.password);
-							this.close();
-						}
-					}),
-			);
+						}),
+				);
+				break;
+			}
+			case 'login':
+				{
+					new Setting(contentEl).addButton((btn) =>
+						btn
+							.setButtonText('Login')
+							.setCta()
+							.onClick(() => {
+								// Show an error to the user that credentials are missing
+								if (!this.password || !this.username) {
+									if (!this.isWarningShown) {
+										const warning = contentEl.createEl('span', {
+											text: 'Missing credentials. Please input username and password.',
+											cls: ['warning', 'fade-in', 'fade-out'],
+										});
+										this.isWarningShown = true;
 
-		// Login button
-		this.modalType === 'login' &&
-			new Setting(contentEl).addButton((btn) =>
-				btn
-					.setButtonText('Login')
-					.setCta()
-					.onClick(() => {
-						// Show an error to the user that credentials are missing
-						if (!this.password || !this.username) {
-							if (!this.isWarningShown) {
-								const warning = contentEl.createEl('span', {
-									text: 'Missing credentials. Please input username and password.',
-									cls: ['warning', 'fade-in', 'fade-out'],
-								});
-								this.isWarningShown = true;
-
-								setTimeout(() => {
-									this.contentEl.removeChild(warning);
-									this.isWarningShown = false;
-								}, 5000);
-							}
-						} else {
-							this.close();
-							this.onSubmit(this.username, this.password);
-						}
-					}),
-			);
+										setTimeout(() => {
+											this.contentEl.removeChild(warning);
+											this.isWarningShown = false;
+										}, 5000);
+									}
+								} else {
+									this.close();
+									this.onSubmit(this.username, this.password);
+								}
+							}),
+					);
+				}
+				break;
+		}
 	}
-
+	// Login button
 	onClose() {
 		const { contentEl } = this;
 		contentEl.empty();

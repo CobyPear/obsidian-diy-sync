@@ -1,38 +1,49 @@
 import type { Request, Response } from 'express';
-import type { Vault } from '@prisma/client';
-import { prisma } from '../db';
+import type { Vault } from '../types';
+import { orm } from '../db/orm';
 import { createOrUpdateNodes } from '../utils/createOrUpdateNodes';
+import { randomUUID } from 'node:crypto';
+
+const vaultStmnt = orm.getNodesOnVault();
+
 export const vaultControllers = {
 	get: async (req: Request, res: Response) => {
 		const vault = req.query.vault as string;
 		const errorMessage = `No vault ${vault} to send. Check the vault name and make sure you've sync'd at least once.`;
 		if (!vault) {
-			return res.status(400).json({
+			res.status(400).json({
 				error:
 					'No vault was sent in the request. Make sure the Vault is set in the plugin options',
 			});
+			return;
 		}
 		if (!req.user) {
-			return res.status(401).json({ message: 'Please login' });
+			res.status(401).json({ message: 'Please login' });
+			return;
 		}
 		try {
 			// get vault from DB
-			// send it!
-			const vaultsFromDB = await prisma.vault.findFirst({
-				where: { name: vault, user: req.user.username },
-				include: { nodes: true },
+			const nodesFromVault = vaultStmnt.all({
+				vault,
+				username: req.user.username,
 			});
-			if (!vaultsFromDB) {
-				return res.status(404).json({
+			if (!nodesFromVault.length) {
+				res.status(404).json({
 					error: errorMessage,
 				});
+				return;
 			}
-			return res.json(vaultsFromDB);
+			res.json({
+				name: vault,
+				nodes: nodesFromVault,
+			});
+			return;
 		} catch (error) {
 			console.error(error);
-			return res.status(500).json({
+			res.status(500).json({
 				error: errorMessage,
 			});
+			return;
 		}
 	},
 	put: async (req: Request, res: Response) => {
@@ -47,33 +58,28 @@ export const vaultControllers = {
 			if (!req.user) {
 				res.status(401).json({ message: 'Please login' });
 			} else if (nodes && vault) {
-				const foundVault = await prisma.vault.findFirst({
-					where: {
-						name: vault,
-						user: req.user.username,
-					},
-					include: {
-						nodes: true,
-					},
+				const foundVault = vaultStmnt.all({
+					vault,
+					username: req.user.username,
 				});
 
 				let vaultId: Vault['id'];
 
-				if (foundVault) {
+				if (foundVault.length > 0) {
 					console.log(`Found vault ${vault} Adding nodes...`);
-					vaultId = foundVault.id;
+					vaultId = foundVault[0].vault_id;
 				} else {
-					const newVault = await prisma.vault.create({
-						data: {
-							name: vault,
-							user: req.user.username,
-						},
+					const newVaultStmnt = orm.createVault();
+					vaultId = randomUUID();
+					newVaultStmnt.run({
+						id: vaultId,
+						name: vault,
+						user: req.user.username,
 					});
-					vaultId = newVault.id;
 				}
 				resultVault = await createOrUpdateNodes({
 					nodes,
-					vaultId: vaultId,
+					vaultId,
 				});
 
 				res.json({
@@ -83,10 +89,11 @@ export const vaultControllers = {
 			}
 		} catch (error) {
 			console.error(error);
-			return res.status(500).json({
+			res.status(500).json({
 				message: 'Something went wrong',
 				error: error,
 			});
+			return;
 		}
 	},
 };

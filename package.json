@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-diy-sync",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Obsidian plugin that syncs data to an sqlite backed express.js server",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
@@ -8,35 +8,44 @@
 		"dev:server": "pnpm -F './server' dev",
 		"dev:plugin": "pnpm -F './plugin' dev",
 		"build:configs": "pnpm -F './configs/**' build",
-		"build:server": "pnpm prisma-generate && pnpm -F './server' build:prod",
+		"build:server": "pnpm -F './server' build:prod",
 		"start:server": "pnpm -F './server' start:prod",
-		"test:server": "pnpm -F './server' test",
-		"server:test:watch": "pnpm -F './server' test:watch",
-		"prisma-generate": "pnpm prisma generate --schema=./server/db/schema.prisma",
-		"prisma-db-push": "pnpm prisma db push --schema=./server/db/schema.prisma --skip-generate"
+		"test:server": "pnpm build:configs && pnpm -F './server' test",
+		"server:test:watch": "pnpm -F './server' test:watch"
 	},
-	"keywords": [],
+	"keywords": [
+		"obsidian.md",
+		"obsidian-sync",
+		"obsidian-plugin",
+		"sqlite"
+	],
 	"author": "CobyPear",
 	"license": "MIT",
 	"devDependencies": {
-		"@types/node": "^16.11.6",
-		"@typescript-eslint/eslint-plugin": "^5.50.0",
-		"@typescript-eslint/parser": "^5.50.0",
-		"eslint": "^8.33.0",
-		"prettier": "^2.8.3"
-	},
-	"dependencies": {
-		"prisma": "^4.9.0"
+		"@eslint/eslintrc": "^3.2.0",
+		"@eslint/js": "^9.18.0",
+		"@types/node": "^22.10.8",
+		"@typescript-eslint/eslint-plugin": "^8.21.0",
+		"@typescript-eslint/parser": "^8.21.0",
+		"eslint": "^9.18.0",
+		"globals": "^15.14.0",
+		"prettier": "^3.4.2",
+		"typescript": "^5.7.3"
 	},
 	"pnpm": {
 		"overrides": {
 			"vitest-environment-obsync": "workspace:*"
-		}
+		},
+		"onlyBuiltDependencies": [
+			"bcrypt",
+			"nodemon",
+			"sqlite3",
+			"better-sqlite3",
+			"esbuild"
+		]
 	},
 	"engines": {
 		"node": ">=18 <=22"
 	},
-	"prisma": {
-		"schema": "./server/db/schema.prisma"
-	}
+	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

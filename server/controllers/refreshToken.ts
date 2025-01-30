@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { prisma } from '../db';
+import { orm } from '../db/orm';
 import { generateToken } from '../utils/generateToken';
 import jwt from 'jsonwebtoken';
 
@@ -13,24 +13,20 @@ export const refreshControllers = {
 		);
 
 		if (!matches) {
-			return res
+			res
 				.status(401)
 				.json({ message: 'Session expired. Please log in again.' });
+			return;
 		}
 
 		if (matches && matches.groups) {
 			const refreshToken = matches.groups.refreshToken;
 			try {
-				const user = await prisma.user.findUnique({
-					where: {
-						username: username,
-					},
-					select: {
-						id: true,
-						username: true,
-						refreshToken: true,
-					},
+				const stmnt = orm.getUser('refreshToken');
+				const user = stmnt.get({
+					username,
 				});
+
 				if (user?.refreshToken === refreshToken) {
 					const isValid = jwt.verify(
 						refreshToken,
@@ -63,12 +59,14 @@ export const refreshControllers = {
 							httpOnly: true,
 						});
 
-						return res.json({ message: 'Tokens Refreshed' });
+						res.json({ message: 'Tokens Refreshed' });
+						return;
 					}
 				}
 			} catch (error) {
 				console.log(error);
-				return res.status(500).json();
+				res.status(500).json();
+				return;
 			}
 		}
 	},

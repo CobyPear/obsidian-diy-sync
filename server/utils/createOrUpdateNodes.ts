@@ -1,5 +1,6 @@
-import type { Node, Vault } from '@prisma/client';
-import { prisma } from '../db';
+import type { Node, Vault } from '../types';
+import { randomUUID } from 'node:crypto';
+import { orm } from '../db/orm';
 
 export const createOrUpdateNodes = async ({
 	nodes,
@@ -9,40 +10,45 @@ export const createOrUpdateNodes = async ({
 	vaultId: Vault['id'];
 }) => {
 	for (const { content, name, extension, path, ctime, mtime } of nodes) {
-		const data = {
-			content,
-			name,
-			extension,
-			path,
-			ctime,
-			mtime,
-		};
-
 		try {
-			await prisma.node.upsert({
-				where: {
-					path: path,
-				},
-				create: {
-					...data,
+			const nodeStmnt = orm.getNode();
+			const node = nodeStmnt.get({ vaultId, path });
+			if (node?.content && node.id) {
+				console.debug(`Found node ${path}... Updating!`);
+				const updateStmnt = orm.updateNode();
+				updateStmnt.run({
+					id: node.id,
 					vaultId,
-				},
-				update: {
-					...data,
+					path,
+					content,
+					name,
+					extension,
+					ctime,
+					mtime,
+				});
+			} else {
+				const insertStmnt = orm.createNode();
+				insertStmnt.run({
+					id: randomUUID(),
+					path,
+					content,
+					name,
+					extension,
+					ctime,
+					mtime,
 					vaultId,
-				},
-			});
+				});
+			}
 		} catch (error) {
+			console.error(error);
 			return;
 		}
 	}
 
-	return await prisma.vault.findUnique({
-		where: {
-			id: vaultId,
-		},
-		include: {
-			nodes: true,
-		},
+	const vaultStmnt = orm.getAllNodesOnVault();
+
+	const vault = vaultStmnt.get({
+		id: vaultId,
 	});
+	return vault;
 };

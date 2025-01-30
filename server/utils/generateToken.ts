@@ -1,6 +1,6 @@
-import { prisma } from '../db/index';
 import jwt from 'jsonwebtoken';
 import type { ReqUser } from '../types';
+import { orm } from '../db/orm';
 
 type TokenType = 'access' | 'refresh';
 
@@ -19,15 +19,12 @@ export const generateToken = async (
 		},
 	);
 
-	// if refresh token, save it to the DB in prisma.user.refreshToken
+	// if refresh token, save it to the DB in user.refreshToken
 	if (type === 'refresh') {
-		await prisma.user.update({
-			where: {
-				id: userId,
-			},
-			data: {
-				refreshToken: token,
-			},
+		const userStmnt = orm.updateUser();
+		userStmnt.run({
+			userId,
+			refreshToken: token,
 		});
 	}
 

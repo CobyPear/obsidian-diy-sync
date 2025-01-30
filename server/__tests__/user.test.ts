@@ -1,4 +1,5 @@
-import { prisma, server } from './setupDb';
+import { orm } from '../db/orm';
+import { server } from './setupDb';
 import { users } from './mockData/users';
 import { vaults } from './mockData/vaults';
 import { nodes1, nodes2 } from './mockData/nodes';
@@ -22,11 +23,13 @@ describe('/api/user', () => {
 		expect(response.body.username).toEqual(users[0].username);
 		expect(response.body.message).toEqual('User created!');
 
-		expect(
-			await prisma.user.findUnique({
-				where: { username: response.body.username },
-			}),
-		).toBeDefined();
+		const stmnt = orm.getUser();
+		const user = stmnt.get({
+			username: response.body.username,
+		});
+
+		expect(user).toBeDefined();
+		expect(user?.username).toEqual(response.body.username);
 	});
 
 	it('should throw an error if username already exists', async () => {
@@ -52,11 +55,13 @@ describe('/api/user', () => {
 		expect(refresh_token).toBeDefined();
 		expect(response.body.username).toEqual(users[1].username);
 		expect(response.body.message).toEqual('User created!');
-		expect(
-			await prisma.user.findUnique({
-				where: { username: response.body.username },
-			}),
-		).toBeDefined();
+		const stmnt = orm.getUser();
+		const user = stmnt.get({
+			username: response.body.username,
+		});
+
+		expect(user).toBeDefined();
+		expect(user?.username).toEqual(response.body.username);
 	});
 
 	it('should delete the current user', async () => {
@@ -74,11 +79,13 @@ describe('/api/user', () => {
 		expect(response.body.message).toEqual(
 			`${users[1].username} and associated vault(s) deleted successfully`,
 		);
-		expect(
-			await prisma.user.findUnique({
-				where: { username: users[1].username },
-			}),
-		).toBeNull();
+
+		const stmnt = orm.getUser();
+		const user = stmnt.get({
+			username: users[1].username,
+		});
+
+		expect(user).toBeUndefined();
 	});
 });
 
@@ -157,7 +164,7 @@ describe('/api/vault', async () => {
 			.post('/api/logout')
 			.send({ username: users[0].username })
 			.expect(200);
-		1;
+
 		await server.get(`/api/vault?vault=${vaults[0].name}`).expect(401);
 	});
 });
@@ -177,14 +184,12 @@ describe('/api/refresh_token', () => {
 	});
 
 	it('should send a 401 if the session is expired', async () => {
-		await prisma.user.update({
-			where: {
-				username: users[0].username,
-			},
-			data: {
-				refreshToken: null,
-			},
+		const stmnt = orm.updateUser();
+		stmnt.run({
+			username: users[0].username,
+			refreshToken: 0,
 		});
+
 		const response = await server
 			.post('/api/refresh_token')
 			.send({ username: users[0].username })
@@ -229,7 +234,17 @@ describe('/api/logout', () => {
 				.get(`/api/blog?vault=${vaults[0].name}`)
 				.expect(200);
 
+			console.log(response.body);
+
 			expect(response.body).toEqual([
+				{
+					content:
+						'---\nfont: matter\nteset: value\n---\n#tag1 #tag2 #unpublished\n\n# My test note\nHere is a paragraph with some text blah blah blah.\n\nLinebreak!\n\n\n',
+					title: 'test note',
+					slug: 'test-note',
+					createdAt: '8/13/2022',
+					modifiedAt: '8/13/2022',
+				},
 				{
 					title: 'another test note',
 					slug: 'another-test-note',
@@ -247,6 +262,14 @@ describe('/api/logout', () => {
 						'\n' +
 						'Linebreak!\n' +
 						'\n',
+				},
+				{
+					content:
+						'---\nfont: matter\nteset: value\n---\n#tag1 #tag2 #unpublished\n\n# My test note 2\nHere is a paragraph with some text blah blah blah.\n\nLinebreak!\n',
+					createdAt: '8/13/2022',
+					modifiedAt: '10/29/2022',
+					slug: 'another-test-note-1',
+					title: 'another test note 1',
 				},
 			]);
 		});

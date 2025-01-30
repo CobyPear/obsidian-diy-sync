@@ -13,8 +13,7 @@ This is a monorepo made with pnpm workspaces.
 
 - TypeScript
 - Express
-- Prisma
-- sqlite - this is the default. You may use any DB supported by Prisma
+- sqlite
 - obsidian-sample-plugin (used for the plugin template)
 - Docker/podman
 
@@ -44,10 +43,10 @@ This is a monorepo made with pnpm workspaces.
    JWT_ACCESS_SECRET=some different secret here!
    DATABASE_URL=file:/some/path/to/sqlite.db
    CLIENT_SECRET=yet another secret here
+   LOCALE=en-US (or your locale here)
    ```
 
 1. Now in the monorepo, you can start the plugin in watch mode with `pnpm dev:plugin`
-1. prepare the database with `pnpm prisma-generate && pnpm prisma-db-push`
 1. Start the server in dev mode `pnpm dev:server`
 
 You will need to reload the plugin in Obsidian to see the changes in the plugin, but the code should be watching for changes in both the server and plugin.
@@ -80,6 +79,10 @@ and to run it, use the `.env` file created earlier. Note: you may want to mount 
 podman run -p 8000:8000 -d --name obsidian-server --env-file=.env obsidian-server:latest
 ```
 
+#### docker-compose
+
+The docker-compose.yaml file is intended for use when developing. You can easily modify it for production if you'd like
+
 ### The Blog Route
 
 There is also a route at `/api/blog` that is not blocked by cors by default. Given a query string parameter of a vault name, you can fetch all nodes that have frontmatter `published: true` or a #published hashtag. (The #published hashtag is removed from the response.)
@@ -89,15 +92,6 @@ I have made the server to be deployable to [render.com](https://render.com) whic
 Click the button below to get started!\*
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
-
-\*Currently after the first deploy you will need to SSH into the server either through their GUI or the given command and run the following commands:
-
-```shell
-pnpm prisma-generate && pnpm prisma-db-push
-```
-
-This will generate the prisma client and create the database.
-For some reason this is not possible on the first build. It might be possible to run these before the first start instead of build but I need to experiment more.
 
 ## Auth
 
@@ -119,4 +113,3 @@ I would like to implement a OTP feature which takes in an email or phone number 
 - Add routes to the server to be able to grab single nodes, or nodes by tag
 - "magic link" or OTP login
 - Media storage
-- Add support for other DBs

@@ -1,7 +1,7 @@
 import type { CorsOptions } from 'cors';
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 import { morganMiddleware } from './utils/logger';
 import { routes } from './routes';

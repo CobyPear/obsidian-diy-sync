@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client';
+import type { Node } from '../../types';
 
-export const nodes1: Omit<Prisma.NodeCreateInput, 'Vault'>[] = [
+export const nodes1: Partial<Node>[] = [
 	{
 		content:
 			'---\nfont: matter\nteset: value\n---\n#tag1 #tag2 #unpublished\n\n# My test note\nHere is a paragraph with some text blah blah blah.\n\nLinebreak!\n\n\n',
@@ -39,7 +39,7 @@ export const nodes1: Omit<Prisma.NodeCreateInput, 'Vault'>[] = [
 	},
 ];
 
-export const nodes2: Omit<Prisma.NodeCreateInput, 'Vault'>[] = [
+export const nodes2: Partial<Node>[] = [
 	{
 		content:
 			'---\nfont-matter: string\npublished: false\narray:\n\t- one\n\t- true\n\t- 3\n---\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n \nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
