@@ -1,11 +1,13 @@
 import type { CorsOptions } from 'cors';
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 import { morganMiddleware } from './utils/logger';
 import { routes } from './routes';
 import { blogControllers } from './controllers/blog';
 
+dotenv.config();
 const app = express();
 const port = process.env.PORT || 8080;
 const host = process.env.HOST || 'localhost';
