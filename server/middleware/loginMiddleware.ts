@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
-import type { User } from '../types';
 import bcrypt from 'bcrypt';
-import { db } from '../db';
 import { generateToken } from '../utils/generateToken';
+import { orm } from '../db/orm';
 
 export const loginMiddleware = async (
 	req: Request,
@@ -10,13 +9,7 @@ export const loginMiddleware = async (
 	next: NextFunction,
 ) => {
 	const { username, password: plaintextPw } = req.body;
-	const stmnt = db.prepare<unknown[], User>(
-		`
-SELECT id, username, password
-		FROM User
-		WHERE username = @username;
-`,
-	);
+	const stmnt = orm.getUser('password');
 
 	const user = stmnt.get({
 		username,

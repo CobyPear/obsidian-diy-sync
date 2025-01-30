@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import type { Node } from '../types';
-import { db } from '../db';
 import { LOCALE } from '../utils/consts';
+import { orm } from '../db/orm';
 
 export const blogControllers = {
 	get: async (req: Request, res: Response) => {
@@ -15,14 +15,8 @@ export const blogControllers = {
 		}
 
 		try {
-			const stmnt = db.prepare<unknown[], Node>(`
-Select Node.*
-  FROM Node
-  JOIN Vault ON Node.vaultId = Vault.id
-  WHERE Vault.name=@vault;
-`);
+			const stmnt = orm.getNodes();
 			const vaultFromDb = stmnt.all({ vault: vault as string });
-			console.log(vaultFromDb);
 
 			if (!vaultFromDb) {
 				res.status(404).json({
@@ -43,7 +37,6 @@ Select Node.*
 				.map(({ name, content, ctime, mtime }: Node) => {
 					const title = name.replace(/\.md$/g, '');
 					const slug = title.replace(/\s/g, '-').toLowerCase();
-					console.debug('LOCALE: ', LOCALE);
 					const createdAt = new Date(Number(ctime)).toLocaleDateString(LOCALE);
 					const modifiedAt = new Date(Number(mtime)).toLocaleDateString(LOCALE);
 

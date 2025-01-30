@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
-import type { User } from '../types';
-import { db } from '../db';
+import { orm } from '../db/orm';
 import { generateToken } from '../utils/generateToken';
 import jwt from 'jsonwebtoken';
 
@@ -23,24 +22,11 @@ export const refreshControllers = {
 		if (matches && matches.groups) {
 			const refreshToken = matches.groups.refreshToken;
 			try {
-				const stmnt = db.prepare<unknown[], User>(`
-SELECT id, username, refreshToken
-  FROM User
-  WHERE username = @username;
-`);
+				const stmnt = orm.getUser('refreshToken');
 				const user = stmnt.get({
 					username,
 				});
-				// const user = await prisma.user.findUnique({
-				// 	where: {
-				// 		username: username,
-				// 	},
-				// 	select: {
-				// 		id: true,
-				// 		username: true,
-				// 		refreshToken: true,
-				// 	},
-				// });
+
 				if (user?.refreshToken === refreshToken) {
 					const isValid = jwt.verify(
 						refreshToken,

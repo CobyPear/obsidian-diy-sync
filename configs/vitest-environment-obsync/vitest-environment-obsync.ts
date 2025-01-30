@@ -11,7 +11,7 @@ export default <Environment>{
 	setup(global) {
 		const dbName = `test_db_${uuid()}.db`;
 		const dbPath = path.join(__dirname, dbName);
-		const DATABASE_URL = `./${dbName}`;
+		const DATABASE_URL = `${dbName}`;
 
 		global.process.env.DATABASE_URL = DATABASE_URL;
 		return {

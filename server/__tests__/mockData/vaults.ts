@@ -5,6 +5,6 @@ export const vaults: Partial<Vault>[] = [
 		name: 'TestingVault',
 	},
 	{
-		name: 'test vault 2',
+		name: 'testvault2',
 	},
 ];

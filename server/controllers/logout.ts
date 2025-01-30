@@ -1,21 +1,20 @@
 import type { Request, Response } from 'express';
-import type { User } from '../types';
-import { db } from '../db';
+import { orm } from '../db/orm';
 import { clearCookies } from '../utils/clearCookies';
 
 export const logoutControllers = {
 	post: async (req: Request, res: Response) => {
 		const { username } = req.body;
 		try {
-			const stmnt = db.prepare<unknown[], User>(`
-UPDATE User
-  SET refreshToken = @refreshToken
-  WHERE username = @username;
-`);
-			stmnt.run({
+			const stmnt = orm.updateUser();
+			const user = stmnt.run({
 				refreshToken: '',
 				username,
 			});
+
+			if (!user.changes) {
+				throw new Error('user not found');
+			}
 		} catch (error) {
 			res.status(404).json({
 				message: `Could not find ${username} in database.`,

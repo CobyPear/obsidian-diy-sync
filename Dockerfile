@@ -5,10 +5,16 @@ RUN corepack enable
 COPY . /app
 WORKDIR /app
 
-
-FROM base AS dev
+FROM base AS install
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+
+FROM install AS test
+RUN pnpm -F './configs/vitest-environment-obsync' build
+CMD ["pnpm", "test:server"]
+
+FROM install AS dev
 CMD ["pnpm", "dev:server"]
+
 
 FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile

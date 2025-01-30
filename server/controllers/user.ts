@@ -1,13 +1,11 @@
 import type { Request, Response } from 'express';
-import type { User } from '../types';
-import { db } from '../db/index';
+import { orm } from '../db/orm';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils/generateToken';
 import { clearCookies } from '../utils/clearCookies';
 import { randomUUID } from 'node:crypto';
 
 const saltRounds = 10;
-// TODO: need a way to create a user from an API route (or do i?)
 export const userControllers = {
 	// create a user
 	post: async (req: Request, res: Response) => {
@@ -23,23 +21,14 @@ export const userControllers = {
 		try {
 			const hashedPw = await bcrypt.hash(plaintextPw, saltRounds);
 			// create new user
-			const newUserStmnt = db.prepare<unknown[], User>(`
-INSERT INTO User (id, username, password)
-  VALUES (@id, @username, @password);
-`);
+			const newUserStmnt = orm.createUser();
+
 			const userId = randomUUID();
 			newUserStmnt.run({
 				id: userId,
 				username,
 				password: hashedPw,
 			});
-
-			// const newUser = await prisma.user.create({
-			// 	data: {
-			// 		username,
-			// 		password: hashedPw,
-			// 	},
-			// });
 
 			const accessToken = await generateToken(
 				userId,
@@ -98,18 +87,11 @@ INSERT INTO User (id, username, password)
 		try {
 			const username = req.user.username;
 
-			const deletedUserStmnt = db.prepare<unknown[], User>(`
-DELETE FROM user
-  WHERE username=@username
-`);
-			const deleted = deletedUserStmnt.get({
+			const deletedUserStmnt = orm.deleteUser();
+			const deleted = deletedUserStmnt.run({
 				username,
 			});
-			// const deleted = await prisma.user.delete({
-			// 	where: {
-			// 		username,
-			// 	},
-			// });
+
 			if (deleted) {
 				clearCookies(res);
 				delete req.user;

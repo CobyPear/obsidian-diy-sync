@@ -1,15 +1,11 @@
 import type { Request, Response } from 'express';
-import type { Vault, Node } from '../types';
-import { db } from '../db';
+import type { Vault } from '../types';
+import { orm } from '../db/orm';
 import { createOrUpdateNodes } from '../utils/createOrUpdateNodes';
 import { randomUUID } from 'node:crypto';
 
-const vaultStmnt = db.prepare<unknown[], Vault & Node & { vault_id: string }>(`
-SELECT Vault.id as vault_id, Node.*
-  FROM Vault
-  LEFT JOIN Node ON Node.vaultId = Vault.id
-  WHERE Vault.name=@vault AND Vault.user=@username
-`);
+const vaultStmnt = orm.getNodesOnVault();
+
 export const vaultControllers = {
 	get: async (req: Request, res: Response) => {
 		const vault = req.query.vault as string;
@@ -31,7 +27,7 @@ export const vaultControllers = {
 				vault,
 				username: req.user.username,
 			});
-			if (!nodesFromVault) {
+			if (!nodesFromVault.length) {
 				res.status(404).json({
 					error: errorMessage,
 				});
@@ -73,10 +69,7 @@ export const vaultControllers = {
 					console.log(`Found vault ${vault} Adding nodes...`);
 					vaultId = foundVault[0].vault_id;
 				} else {
-					const newVaultStmnt = db.prepare<unknown[], Vault>(`
-INSERT INTO Vault (id, name, user)
-  VALUES (@id, @name, @user);
-`);
+					const newVaultStmnt = orm.createVault();
 					vaultId = randomUUID();
 					newVaultStmnt.run({
 						id: vaultId,

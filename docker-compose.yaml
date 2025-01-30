@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+  test:
+    volumes:
+      - './configs:/app/configs/'
+      - './server:/app/server/'
+    env_file:
+      - .env
+    build:
+      context: .
+      target: test
+
   dev-server:
     container_name: obsync-server
     volumes:
