@@ -1,14 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "skipLibCheck": true,
-  }
+	"compilerOptions": {
+		"target": "ES6",
+		"module": "esnext",
+		"moduleResolution": "node",
+		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"skipLibCheck": true
+	}
 }

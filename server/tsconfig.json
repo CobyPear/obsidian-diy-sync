@@ -1,16 +1,16 @@
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "skipLibCheck": true,
-    "outDir": "build",
-  },
-  "exclude": ["__tests__"]
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "CommonJS",
+		"moduleResolution": "node",
+		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"skipLibCheck": true,
+		"outDir": "build"
+	},
+	"exclude": ["__tests__"]
 }

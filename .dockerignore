@@ -1,0 +1,10 @@
+docs
+node_modules
+.prettierrc
+.gitignore
+shell.nix
+render.yaml
+plugin
+.direnv
+pruned
+.env

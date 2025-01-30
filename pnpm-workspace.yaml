@@ -1,3 +1,4 @@
-plugin: plugin/**
-server: server
-configs: configs/**
+packages:
+  - plugin/**
+  - server
+  - configs/**
