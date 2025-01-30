@@ -6,14 +6,6 @@ import { rmSync, statSync } from 'node:fs';
 
 export const server = request.agent(app);
 
-// export const prisma = new PrismaClient({
-// 	datasources: {
-// 		db: {
-// 			url: process.env.DATABASE_URL,
-// 		},
-// 	},
-// });
-
 beforeAll(() => {
 	process.env.TEST_ENV = 'true';
 	process.env.JWT_REFRESH_SECRET = 'test_Refresh';

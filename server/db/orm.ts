@@ -58,7 +58,9 @@ class ORM {
 			LEFT JOIN Node ON Node.vaultId = Vault.id
 			WHERE Vault.name=@vault AND Vault.user=@username;`;
 
-		return db.prepare<unknown[], Vault & Node & { vault_id: string }>(query);
+		return this.db.prepare<unknown[], Vault & Node & { vault_id: string }>(
+			query,
+		);
 	}
 
 	getAllNodesOnVault() {
@@ -69,7 +71,7 @@ class ORM {
 			WHERE v.id = @id
 			LIMIT 1;`;
 
-		return db.prepare<unknown[], Vault>(query);
+		return this.db.prepare<unknown[], Vault>(query);
 	}
 
 	createVault() {
@@ -77,7 +79,7 @@ class ORM {
 			INSERT INTO Vault (id, name, user)
 			VALUES (@id, @name, @user);`;
 
-		return db.prepare<unknown[], Vault>(query);
+		return this.db.prepare<unknown[], Vault>(query);
 	}
 
 	getNode() {
@@ -86,7 +88,7 @@ class ORM {
 		FROM Node
 		WHERE Node.vaultId=@vaultId AND Node.path=@path;`;
 
-		return db.prepare<unknown[], Node>(query);
+		return this.db.prepare<unknown[], Node>(query);
 	}
 
 	updateNode() {
@@ -101,7 +103,7 @@ class ORM {
 					mtime=@mtime
 				WHERE id=@id AND vaultId=@vaultId;`;
 
-		return db.prepare<unknown[], Node>(query);
+		return this.db.prepare<unknown[], Node>(query);
 	}
 
 	createNode() {
@@ -109,7 +111,7 @@ class ORM {
 			INSERT INTO Node (id, path, content, name, extension, ctime, mtime, vaultId)
 			VALUES (@id, @path, @content, @name, @extension, @ctime, @mtime, @vaultId);`;
 
-		return db.prepare(query);
+		return this.db.prepare(query);
 	}
 }
 

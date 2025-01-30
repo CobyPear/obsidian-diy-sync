@@ -43,6 +43,7 @@ This is a monorepo made with pnpm workspaces.
    JWT_ACCESS_SECRET=some different secret here!
    DATABASE_URL=file:/some/path/to/sqlite.db
    CLIENT_SECRET=yet another secret here
+   LOCALE=en-US (or your locale here)
    ```
 
 1. Now in the monorepo, you can start the plugin in watch mode with `pnpm dev:plugin`

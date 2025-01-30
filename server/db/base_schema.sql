@@ -1,3 +1,4 @@
+-- saving this for historical purposes
 CREATE TABLE IF NOT EXISTS "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "username" TEXT NOT NULL,
