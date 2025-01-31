@@ -23,7 +23,7 @@ export const generateToken = async (
 	if (type === 'refresh') {
 		const userStmnt = orm.updateUser();
 		userStmnt.run({
-			userId,
+			username,
 			refreshToken: token,
 		});
 	}
