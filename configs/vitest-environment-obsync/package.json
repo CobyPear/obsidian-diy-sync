@@ -13,13 +13,13 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@types/uuid": "^10.0.0",
-		"@typescript-eslint/eslint-plugin": "^8.21.0",
-		"@typescript-eslint/parser": "^8.21.0",
-		"eslint": "^9.18.0",
-		"prettier": "^3.4.2",
-		"vitest": "^3.0.3"
+		"@typescript-eslint/eslint-plugin": "^8.57.2",
+		"@typescript-eslint/parser": "^8.57.2",
+		"eslint": "^9.39.4",
+		"prettier": "^3.8.1",
+		"vitest": "^3.2.4"
 	},
 	"dependencies": {
-		"uuid": "^11.0.5"
+		"uuid": "^11.1.0"
 	}
 }
