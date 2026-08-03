@@ -1,5 +1,9 @@
 # Obsidian.md DIY Sync Server+Plugin
 
+## Archive notice
+
+this repo is now archived. Use it at your own risk! Issues will likely be ignored.
+
 ## Prerequisites
 
 This is a monorepo made with pnpm workspaces.
